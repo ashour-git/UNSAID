@@ -1,0 +1,111 @@
+﻿{% extends "base.html" %}
+
+{% block title %}UNSAID &mdash; Extrait de Parfum House{% endblock %}
+
+{% block seo %}
+{{ super() }}
+<meta property="og:title" content="UNSAID &mdash; Extrait de Parfum House">
+<meta property="og:description" content="Six extrait compositions. Black glass. Paris formulation discipline.">
+<meta property="og:image" content="{{ campaign_images[0] }}">
+<meta name="twitter:title" content="UNSAID &mdash; Extrait de Parfum House">
+<meta name="twitter:description" content="Six extrait compositions. Black glass.">
+<meta name="twitter:image" content="{{ campaign_images[0] }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"UNSAID","url":"{{ request.url }}","description":"An architectural fragrance house. Six extrait compositions in black glass.","potentialAction":{"@type":"SearchAction","target":"{{ request.url }}?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden bg-shell px-5 pb-20 pt-28 text-canvas sm:px-8 lg:px-12">
+    <img src="{{ campaign_images[0] }}" alt="UNSAID hero atmosphere" class="absolute inset-0 h-full w-full object-cover opacity-30" fetchpriority="high" sizes="100vw">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.10),rgba(15,13,12,0)_42%),linear-gradient(180deg,rgba(15,13,12,0.18)_0%,rgba(15,13,12,0.78)_100%)]"></div>
+    <div class="relative z-10 mx-auto grid min-h-[82vh] max-w-[1800px] gap-8 lg:grid-cols-[0.22fr_0.56fr_0.22fr] lg:items-end">
+        <div data-hero-reveal class="hidden lg:block">
+            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-canvas/56">House note</p>
+            <p class="mt-5 max-w-[10rem] text-sm leading-7 text-canvas/70">A luxury perfume house should present one object with total conviction.</p>
+        </div>
+        <div class="relative min-h-[34rem] sm:min-h-[44rem] lg:min-h-[54rem]">
+            {% if products %}
+            <img src="{{ products[0].image_url }}" alt="{{ products[0].name }} bottle" class="absolute bottom-0 left-1/2 h-[88%] -translate-x-1/2 object-contain drop-shadow-[0_42px_52px_rgba(0,0,0,0.34)] sm:h-[92%]">
+            {% endif %}
+            <div class="absolute left-0 top-0 border border-canvas/14 bg-shell/42 px-4 py-3 backdrop-blur-xl sm:left-8 sm:top-8">
+                <p class="text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-canvas/78">Black glass / dominant object</p>
+            </div>
+        </div>
+        <div data-hero-reveal class="flex flex-col justify-end">
+            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-canvas/58">UNSAID / Paris / Extrait</p>
+            <h1 class="mt-6 font-display text-5xl leading-[0.9] text-canvas sm:text-6xl lg:text-7xl xl:text-[5.8rem]">Quiet authority in six compositions.</h1>
+            <p class="mt-6 max-w-md text-sm leading-7 text-canvas/74 sm:text-base sm:leading-8">No excess image language. No campaign theatre. Only the bottle, the material, and the memory it leaves behind.</p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+                <a href="#collection" class="inline-flex justify-center border border-canvas/18 bg-canvas px-6 py-3.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:bg-metal hover:border-metal">View Collection</a>
+                <button type="button" @click="chatOpen = true" class="inline-flex justify-center border border-canvas/18 px-6 py-3.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:border-canvas">Consult The Perfumer</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="collection" class="bg-canvas px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+    <div class="mx-auto max-w-[1800px]">
+        <div class="grid gap-6 border-b border-shell/10 pb-10 lg:grid-cols-[0.32fr_1.68fr]">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">The Collection</p>
+            <h2 data-text-reveal class="font-display text-3xl leading-[0.94] text-shell sm:text-5xl lg:text-6xl">Six bottle-led signatures, each built with its own temperature.</h2>
+        </div>
+        <div class="mt-10 space-y-4 sm:space-y-5">
+            {% for product in products %}
+            {% set campaign_image = campaign_images[loop.index0 % 6] %}
+            <article data-product-card class="group grid overflow-hidden border border-shell/10 bg-paper lg:grid-cols-[0.34fr_0.26fr_0.40fr]">
+                <div class="relative min-h-[16rem] overflow-hidden bg-shell sm:min-h-[18rem]">
+                    <img src="{{ campaign_image }}" alt="{{ product.name }} atmosphere" class="absolute inset-0 h-full w-full object-cover opacity-34 transition duration-700 group-hover:scale-105 group-hover:opacity-46" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-r from-shell/82 to-shell/35"></div>
+                    <div class="absolute left-6 top-6 right-6">
+                        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-canvas/56">{{ "%02d"|format(loop.index) }} / {{ product.concentration }}</p>
+                        <h3 class="mt-6 font-display text-4xl leading-none text-canvas sm:text-5xl">{{ product.name.replace("Unsaid : ", "") }}</h3>
+                        <p class="mt-4 max-w-sm text-sm leading-7 text-canvas/76">{{ product.subtitle }}</p>
+                    </div>
+                </div>
+                <div class="relative min-h-[14rem] overflow-hidden border-y border-shell/10 bg-stone lg:border-x lg:border-y-0">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.24),rgba(214,206,194,0)_64%)]"></div>
+                    <img src="{{ product.image_url }}" alt="{{ product.name }} bottle" class="absolute bottom-0 left-1/2 h-[92%] -translate-x-1/2 object-contain transition duration-700 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="flex flex-col justify-between p-6 sm:p-8">
+                    <div>
+                        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Architecture</p>
+                        <p class="mt-4 text-sm leading-7 text-text">{{ product.olfactory_notes.top[0] }} / {{ product.olfactory_notes.heart[0] }} / {{ product.olfactory_notes.base[0] }}</p>
+                    </div>
+                    <div class="mt-8 flex items-end justify-between gap-4 border-t border-shell/10 pt-6">
+                        <div>
+                            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">{{ product.volume }}</p>
+                            <p class="mt-2 font-display text-2xl leading-none text-shell">{{ "%.2f"|format(product.price) }}</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="/products/{{ product.dynamic_slug }}" class="inline-flex justify-center border border-shell/12 px-4 py-3 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:border-shell">View</a>
+                            <button type="button" @click="openCheckout({ slug: '{{ product.dynamic_slug }}', name: '{{ product.name }}', concentration: '{{ product.concentration }}', price: '{{ '%.2f'|format(product.price) }}', volume: '{{ product.volume }}' })" class="border border-shell bg-shell px-4 py-3 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal">Secure</button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="discovery" class="border-t border-shell/10 bg-paper px-5 py-20 sm:px-8 lg:px-12">
+    <div class="mx-auto grid max-w-[1800px] gap-10 lg:grid-cols-[0.52fr_1.48fr] lg:items-start">
+        <div class="lg:sticky lg:top-32">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Private Consultation</p>
+            <h2 data-text-reveal class="mt-8 font-display text-3xl leading-tight text-shell sm:text-4xl lg:text-5xl">Use the consultant when the collection needs narrowing.</h2>
+            <p class="mt-6 max-w-md text-sm leading-7 text-text">The assistant is there to refine taste, not replace the bottle-led experience.</p>
+        </div>
+        <div id="quiz-panel" class="quiz-panel">{% include "partials/quiz_step_1.html" %}</div>
+    </div>
+</section>
+
+<section id="ritual" class="bg-shell px-5 py-20 text-canvas sm:px-8 lg:px-12">
+    <div class="mx-auto max-w-[1800px]">
+        <p class="mb-10 text-xs font-semibold uppercase tracking-[0.18em] text-canvas/58">The Ritual</p>
+        <div class="grid gap-px bg-canvas/10 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="bg-shell p-8 sm:p-10 lg:p-14"><p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/58">01 &mdash; Apply</p><p data-text-reveal class="mt-10 font-display text-2xl leading-tight text-canvas sm:mt-14 sm:text-3xl">Skin, fabric, silence.</p></div>
+            <div class="bg-shell p-8 sm:p-10 lg:p-14"><p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/58">02 &mdash; Wait</p><p data-text-reveal class="mt-10 font-display text-2xl leading-tight text-canvas sm:mt-14 sm:text-3xl">Let the material speak last.</p></div>
+            <div class="bg-shell p-8 sm:p-10 lg:p-14"><p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/58">03 &mdash; Remain</p><p data-text-reveal class="mt-10 font-display text-2xl leading-tight text-canvas sm:mt-14 sm:text-3xl">The room remembers restraint.</p></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

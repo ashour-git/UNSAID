@@ -1,0 +1,28 @@
+<div class="quiz-panel overflow-hidden border border-black/10 bg-stone">
+    <div class="grid min-h-[40rem] gap-px bg-black/5 lg:grid-cols-[0.58fr_0.42fr]">
+        <div class="bg-parchment p-10 sm:p-14 lg:p-16">
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-mute">Calibrated recommendation</p>
+            <h3 class="mt-8 font-display text-5xl leading-none text-shell sm:text-6xl">{{ product.name.replace("Unsaid : ", "") }}</h3>
+            <p class="mt-8 max-w-2xl text-lg leading-8 text-text sm:text-xl sm:leading-9">{{ product.subtitle }}</p>
+            <p class="mt-6 max-w-2xl text-sm leading-7 text-text">{{ product.description }}</p>
+            <div class="mt-10 grid gap-px bg-black/10 sm:grid-cols-3">
+                <div class="bg-stone p-6"><p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Top</p><p class="mt-4 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.top | join(" / ") }}</p></div>
+                <div class="bg-stone p-6"><p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Heart</p><p class="mt-4 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.heart | join(" / ") }}</p></div>
+                <div class="bg-stone p-6"><p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Base</p><p class="mt-4 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.base | join(" / ") }}</p></div>
+            </div>
+            <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <a href="/products/{{ product.dynamic_slug }}" class="inline-flex justify-center border border-shell px-8 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:bg-shell hover:text-stone">View {{ product.name.replace("Unsaid : ", "") }}</a>
+                <button type="button" @click="openCheckout({ slug: '{{ product.dynamic_slug }}', name: '{{ product.name }}', concentration: '{{ product.concentration }}', price: '{{ '%.2f'|format(product.price) }}', volume: '{{ product.volume }}' })" class="inline-flex justify-center border border-shell bg-shell px-8 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-stone transition duration-500 hover:bg-metal hover:border-metal">Order Recommendation</button>
+                <button type="button" hx-get="/api/quiz/start" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" class="inline-flex justify-center border border-black/10 px-8 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-mute transition duration-500 hover:border-shell hover:text-shell">Recalibrate</button>
+            </div>
+        </div>
+        <div class="relative min-h-[30rem] overflow-hidden bg-stone">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.28),rgba(214,206,194,0)_64%)]"></div>
+            <img src="{{ product.image_url }}" alt="{{ product.name }} bottle" class="absolute bottom-0 left-1/2 h-[88%] -translate-x-1/2 object-contain drop-shadow-[0_24px_34px_rgba(22,20,18,0.22)]">
+            <div class="absolute left-8 top-8 border border-black/10 bg-stone/84 px-4 py-3 backdrop-blur-xl">
+                <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell">Your match</p>
+            </div>
+            <p class="absolute bottom-8 left-8 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-shell">{{ product.volume }}&ensp;/&ensp;{{ product.concentration }}</p>
+        </div>
+    </div>
+</div>

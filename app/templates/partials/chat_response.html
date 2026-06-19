@@ -1,0 +1,15 @@
+<div class="space-y-4">
+    {% if user_message %}
+    <div class="flex justify-end">
+        <div class="max-w-[82%] border border-dark/10 bg-dark px-4 py-3 text-sm leading-6 text-stone">
+            {{ user_message }}
+        </div>
+    </div>
+    {% endif %}
+    <div class="flex items-start gap-3">
+        <span class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-black/10 bg-parchment text-[0.55rem] font-semibold uppercase tracking-wide text-dark">AI</span>
+        <div class="max-w-[85%] border border-black/8 bg-parchment px-4 py-3 text-sm leading-6 text-dark/85">
+            {{ response }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1600" role="img" aria-labelledby="title desc">
+  <title id="title">UNSAID black glass atelier editorial</title>
+  <desc id="desc">Editorial luxury fragrance composition with black bottle, stone, and dramatic light.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#050505"/><stop offset="0.45" stop-color="#15130f"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <radialGradient id="light" cx="52%" cy="34%" r="46%"><stop offset="0" stop-color="#d9c9aa" stop-opacity="0.3"/><stop offset="0.5" stop-color="#6b5d44" stop-opacity="0.12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bottle" x1="0" x2="1"><stop offset="0" stop-color="#020202"/><stop offset="0.26" stop-color="#39342b"/><stop offset="0.53" stop-color="#040404"/><stop offset="0.82" stop-color="#77694f"/><stop offset="1" stop-color="#020202"/></linearGradient>
+  </defs>
+  <rect width="1400" height="1600" fill="url(#bg)"/>
+  <rect x="104" y="108" width="1192" height="1384" fill="none" stroke="#e7e2d8" stroke-opacity="0.1" stroke-width="2"/>
+  <circle cx="730" cy="600" r="560" fill="url(#light)"/>
+  <path d="M188 1280h1024l-116 142H304z" fill="#e7e2d8" opacity="0.08"/>
+  <path d="M570 280h260v144H570z" fill="#030303" stroke="#b8a67f" stroke-width="5"/>
+  <path d="M520 414h360v720c0 84-68 152-152 152h-56c-84 0-152-68-152-152V414z" fill="url(#bottle)" stroke="#b8a67f" stroke-width="6"/>
+  <path d="M570 470h54v604c0 86 34 136 84 168" fill="none" stroke="#fff1c8" stroke-opacity="0.14" stroke-width="11"/>
+  <rect x="578" y="730" width="244" height="270" fill="#050505" stroke="#dccb9f" stroke-width="3"/>
+  <text x="700" y="840" fill="#f5f1e8" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700" text-anchor="middle" letter-spacing="18">UNSAID</text>
+  <text x="700" y="905" fill="#a99672" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" letter-spacing="9">EXTRAIT HOUSE</text>
+</svg>

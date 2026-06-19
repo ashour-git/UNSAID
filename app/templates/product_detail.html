@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} &mdash; UNSAID{% endblock %}
+
+{% block seo %}
+{{ super() }}
+<meta property="og:title" content="{{ product.name }} &mdash; UNSAID">
+<meta property="og:description" content="{{ product.subtitle }}. {{ product.description }}">
+<meta property="og:image" content="{{ campaign_image }}">
+<meta property="og:type" content="product">
+<meta property="product:price:amount" content="{{ '%.2f'|format(product.price) }}">
+<meta property="product:price:currency" content="USD">
+<meta name="twitter:title" content="{{ product.name }} &mdash; UNSAID">
+<meta name="twitter:description" content="{{ product.subtitle }}">
+<meta name="twitter:image" content="{{ campaign_image }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"{{ product.name }}","description":"{{ product.description }}","sku":"{{ product.dynamic_slug }}","offers":{"@type":"Offer","price":"{{ '%.2f'|format(product.price) }}","priceCurrency":"USD","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"}}</script>
+{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden bg-stone px-5 pb-20 pt-28 sm:px-8 lg:px-12">
+    <div class="mx-auto max-w-[1800px]">
+        <nav class="mb-8 flex flex-wrap items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute sm:text-[0.65rem]" aria-label="Breadcrumb">
+            <a href="/" class="transition duration-500 hover:text-shell">Home</a><span class="text-black/20">&sol;</span><a href="/#collection" class="transition duration-500 hover:text-shell">Collection</a><span class="text-black/20">&sol;</span><span class="text-shell">{{ product.name.replace("Unsaid : ", "") }}</span>
+        </nav>
+
+        <div class="grid gap-6 lg:grid-cols-[0.38fr_0.62fr] lg:items-start">
+            <aside class="border border-black/10 bg-parchment p-6 lg:sticky lg:top-28 lg:p-8">
+                <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Object data</p>
+                <h1 class="mt-6 font-display text-4xl leading-none text-shell sm:text-5xl">{{ product.name.replace("Unsaid : ", "") }}</h1>
+                <p class="mt-5 text-base leading-7 text-text">{{ product.subtitle }}</p>
+                <p class="mt-8 text-sm leading-7 text-text">{{ product.description }}</p>
+
+                <div class="mt-8 border-t border-black/10 pt-6">
+                    <div class="grid gap-4 text-[0.62rem] uppercase tracking-[0.18em] text-mute">
+                        <div class="flex items-center justify-between"><span>Concentration</span><span class="text-shell">{{ product.concentration }}</span></div>
+                        <div class="flex items-center justify-between"><span>Volume</span><span class="text-shell">{{ product.volume }}</span></div>
+                        <div class="flex items-center justify-between"><span>SKU</span><span class="text-shell">{{ product.dynamic_slug }}</span></div>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid gap-px bg-black/10">
+                    <div class="bg-stone p-5"><p class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-mute">Top</p><p class="mt-3 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.top | join(" / ") }}</p></div>
+                    <div class="bg-stone p-5"><p class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-mute">Heart</p><p class="mt-3 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.heart | join(" / ") }}</p></div>
+                    <div class="bg-stone p-5"><p class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-mute">Base</p><p class="mt-3 text-xs uppercase leading-6 tracking-tight text-shell">{{ product.olfactory_notes.base | join(" / ") }}</p></div>
+                </div>
+
+                <div class="mt-8 border border-black/10 bg-stone p-6">
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Acquisition</p>
+                    <p class="mt-5 font-display text-3xl leading-none text-shell">{{ "%.2f"|format(product.price) }}</p>
+                    <button type="button" @click="openCheckout({ slug: '{{ product.dynamic_slug }}', name: '{{ product.name }}', concentration: '{{ product.concentration }}', price: '{{ '%.2f'|format(product.price) }}', volume: '{{ product.volume }}' })" class="mt-6 w-full border border-shell bg-shell px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal">Secure This Bottle</button>
+                </div>
+            </aside>
+
+            <div class="relative min-h-[36rem] overflow-hidden border border-black/10 bg-stone sm:min-h-[48rem] lg:min-h-[56rem]">
+                <img src="{{ campaign_image }}" alt="{{ product.name }} atmosphere" class="absolute inset-0 h-full w-full object-cover opacity-72" fetchpriority="high" sizes="(max-width: 1023px) 100vw, 62vw">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone via-stone/38 to-transparent"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.28),rgba(214,206,194,0)_64%)]"></div>
+                <img src="{{ product.image_url }}" alt="{{ product.name }} bottle" class="absolute bottom-0 left-1/2 h-[84%] -translate-x-1/2 object-contain drop-shadow-[0_30px_40px_rgba(15,13,12,0.24)] sm:h-[88%]">
+                <div class="absolute left-6 top-6 border border-black/10 bg-stone/80 px-4 py-3 backdrop-blur-xl sm:left-10 sm:top-10">
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell">Black glass / Paris</p>
+                </div>
+                <div class="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4 sm:bottom-10 sm:left-10 sm:right-10">
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell sm:text-[0.68rem]">{{ product.volume }}</p>
+                    <p class="text-right text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell sm:text-[0.68rem]">{{ product.concentration }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-sticky-cta flex items-center justify-between gap-3 lg:hidden">
+        <p class="font-display text-xl leading-none text-shell">{{ "%.2f"|format(product.price) }}</p>
+        <button type="button" @click="openCheckout({ slug: '{{ product.dynamic_slug }}', name: '{{ product.name }}', concentration: '{{ product.concentration }}', price: '{{ '%.2f'|format(product.price) }}', volume: '{{ product.volume }}' })" class="flex-1 border border-shell bg-shell px-4 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 active:scale-[0.98]">Secure This Bottle</button>
+    </div>
+</section>
+
+{% if related_products %}
+<section class="border-t border-black/10 bg-paper px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+    <div class="mx-auto max-w-[1800px]">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Continue exploring</p>
+        <h2 class="mt-4 font-display text-3xl leading-none text-shell sm:text-5xl">Other compositions</h2>
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for related in related_products %}
+            <a href="/products/{{ related.dynamic_slug }}" class="group relative flex min-h-[22rem] flex-col overflow-hidden border border-black/10 bg-stone transition duration-500 hover:-translate-y-1 hover:border-shell/20">
+                <div class="relative h-52 overflow-hidden border-b border-black/10 bg-parchment">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.24),rgba(214,206,194,0)_66%)]"></div>
+                    <img src="{{ related.image_url }}" alt="{{ related.name }} bottle" class="absolute bottom-0 left-1/2 h-[88%] -translate-x-1/2 object-contain transition duration-700 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="flex flex-1 flex-col p-6">
+                    <p class="font-display text-3xl leading-none text-shell">{{ related.name.replace("Unsaid : ", "") }}</p>
+                    <p class="mt-3 text-sm leading-6 text-text">{{ related.subtitle }}</p>
+                    <p class="mt-auto pt-6 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">{{ related.concentration }} / {{ related.volume }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+<div class="border border-dark/10 bg-parchment p-7 text-dark">
+    <p class="text-[0.65rem] font-medium uppercase tracking-wide text-clay">Dispatch Ready</p>
+    <p class="mt-5 font-display text-2xl leading-tight text-dark">{{ product.name.replace("Unsaid : ", "") }} is prepared for WhatsApp close.</p>
+    <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="mt-7 inline-flex w-full justify-center border border-dark bg-dark px-6 py-4 text-xs font-medium uppercase tracking-wide text-stone transition duration-500 hover:bg-bronze hover:border-bronze">Open WhatsApp Business</a>
+</div>
+<script>window.setTimeout(() => { window.location.href = "{{ whatsapp_url }}"; }, 300);</script>

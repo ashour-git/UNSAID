@@ -1,0 +1,236 @@
+﻿<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="UNSAID extrait de parfum. An architectural fragrance house. Six extrait compositions in black glass.">
+    <meta name="theme-color" content="#d6cec2">
+    <meta name="color-scheme" content="light">
+
+    {% block seo %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="UNSAID &mdash; Extrait de Parfum House">
+    <meta property="og:description" content="Six extrait compositions. Black glass. Paris formulation discipline.">
+    <meta property="og:site_name" content="UNSAID">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="{{ request.url }}">
+    {% endblock %}
+
+    <title>{% block title %}UNSAID{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: "#d6cec2",
+                        paper: "#eee6da",
+                        shell: "#0f0d0c",
+                        text: "#1c1917",
+                        mute: "#4f4941",
+                        soft: "#7c7368",
+                        metal: "#7d6649",
+                        line: "#b2a89a"
+                    },
+                    fontFamily: {
+                        display: ["Bodoni Moda", "Georgia", "serif"],
+                        sans: ["Manrope", "Helvetica Neue", "Arial", "sans-serif"]
+                    },
+                    letterSpacing: {
+                        label: "0.2em",
+                        tight: "0.08em"
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        body { background: #d6cec2; }
+        ::selection { background: #0f0d0c; color: #d6cec2; }
+        :focus-visible { outline: 2px solid #7d6649; outline-offset: 3px; }
+        .skip-link { position: absolute; top: -100%; left: 1rem; z-index: 100; padding: 0.75rem 1.25rem; background: #0f0d0c; color: #d6cec2; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; transition: top 0.3s; }
+        .skip-link:focus { top: 1rem; }
+        .text-balance { text-wrap: balance; }
+        .image-frame { position: relative; overflow: hidden; }
+        .image-frame img { transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.7s ease; }
+        .image-frame:hover img { transform: scale(1.03); }
+        .quiz-panel { transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+        .order-panel, .chat-panel { will-change: transform; }
+        .htmx-swapping { opacity: 0; transform: translateY(0.75rem); }
+        .htmx-settling { opacity: 1; transform: translateY(0); }
+        .htmx-indicator { opacity: 0; transition: opacity 0.2s ease; }
+        .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { opacity: 1; }
+        @media (max-width: 767px) {
+            .mobile-sticky-cta {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 30;
+                padding: 0.75rem 1rem;
+                background: rgba(214,206,194,0.96);
+                border-top: 1px solid rgba(15,13,12,0.08);
+                backdrop-filter: blur(18px);
+            }
+        }
+    </style>
+</head>
+<body
+    x-data="{
+        mobileMenuOpen: false,
+        drawerOpen: false,
+        chatOpen: false,
+        scrolled: false,
+        showBackToTop: false,
+        selectedProduct: { slug: '', name: 'UNSAID Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' },
+        openCheckout(product) {
+            this.selectedProduct = product;
+            this.drawerOpen = true;
+            this.$nextTick(() => window.animateOrderDrawer && window.animateOrderDrawer());
+        },
+        toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen; },
+        closeMobileMenu() { this.mobileMenuOpen = false; }
+    }"
+    x-init="scrolled = window.scrollY > 18; showBackToTop = window.scrollY > 600; window.addEventListener('scroll', () => { scrolled = window.scrollY > 18; showBackToTop = window.scrollY > 600; });"
+    class="min-h-screen bg-canvas font-sans text-text antialiased"
+>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <nav :class="scrolled ? 'border-shell/8 bg-canvas/94 backdrop-blur-xl' : 'border-transparent bg-transparent'" class="fixed inset-x-0 top-0 z-40 border-b transition-all duration-700">
+        <div class="mx-auto flex h-20 max-w-[1800px] items-center justify-between px-5 sm:px-8 lg:px-12">
+            <a href="/" class="font-display text-[1.85rem] leading-none text-shell sm:text-[2.15rem]">Unsaid</a>
+            <div class="hidden items-center gap-8 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-mute md:flex">
+                <a href="/#collection" class="transition duration-500 hover:text-shell">Collection</a>
+                <a href="/#discovery" class="transition duration-500 hover:text-shell">Discovery</a>
+                <a href="/#ritual" class="transition duration-500 hover:text-shell">Ritual</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button @click="chatOpen = !chatOpen" class="hidden border border-shell/10 px-4 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute transition duration-500 hover:border-shell hover:text-shell sm:inline-flex">Consult</button>
+                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' })" class="hidden border border-shell bg-shell px-5 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal sm:inline-flex">Enquire</button>
+                <button @click="toggleMobileMenu()" class="inline-flex items-center gap-2 border border-shell/10 px-3 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:border-shell md:hidden"><span x-show="!mobileMenuOpen">Menu</span><span x-show="mobileMenuOpen">Close</span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div x-cloak x-show="mobileMenuOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-30 bg-canvas/97 backdrop-blur-xl md:hidden" @click.self="closeMobileMenu()">
+        <div class="flex h-full flex-col items-center justify-center gap-8 text-center">
+            <a href="/#collection" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Collection</a>
+            <a href="/#discovery" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Discovery</a>
+            <a href="/#ritual" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Ritual</a>
+            <div class="mt-4 flex flex-col gap-4">
+                <button @click="chatOpen = !chatOpen; closeMobileMenu()" class="border border-shell/10 px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-shell">Consult AI</button>
+                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' }); closeMobileMenu()" class="border border-shell bg-shell px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-canvas">Enquire</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content">{% block content %}{% endblock %}</main>
+
+    <button x-cloak x-show="showBackToTop" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 z-30 border border-shell/10 bg-canvas/92 px-4 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute backdrop-blur-xl transition duration-500 hover:border-shell hover:text-shell">Top</button>
+
+    <aside x-cloak x-show="drawerOpen" x-transition.opacity.duration.400ms class="fixed inset-0 z-50 bg-shell/18 backdrop-blur-sm" aria-modal="true" role="dialog">
+        <div class="order-panel absolute inset-y-0 right-0 w-full max-w-[34rem] border-l border-shell/8 bg-canvas text-text">
+            <div class="flex h-full flex-col">
+                <div class="flex items-center justify-between border-b border-shell/8 px-6 py-6 sm:px-8 sm:py-7">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-shell">Private Order</p>
+                    <button @click="drawerOpen = false" class="text-xs uppercase tracking-[0.18em] text-mute transition duration-500 hover:text-shell">Close</button>
+                </div>
+                <div class="flex-1 overflow-y-auto px-6 py-8 sm:px-8">
+                    <div class="border border-shell/8 bg-paper p-5 sm:p-6">
+                        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Selected Fragrance</p>
+                        <p class="mt-5 font-display text-3xl leading-none text-shell" x-text="selectedProduct.name"></p>
+                        <p class="mt-5 text-xs uppercase tracking-[0.18em] text-mute"><span x-text="selectedProduct.volume"></span>&nbsp;&nbsp;/&nbsp;&nbsp;<span x-text="selectedProduct.concentration"></span></p>
+                        <p class="mt-4 text-sm text-metal" x-show="selectedProduct.price"><span x-text="selectedProduct.price"></span></p>
+                    </div>
+                    <form id="order-form" hx-post="/api/orders/whatsapp" hx-target="#order-dispatch" hx-swap="innerHTML" class="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
+                        <input type="hidden" name="product_slug" :value="selectedProduct.slug">
+                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Full Name</span><input required name="customer_name" type="text" autocomplete="name" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Your name"></label>
+                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Phone Number</span><input required name="customer_phone" type="tel" autocomplete="tel" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="+1 212 555 0182"></label>
+                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Shipping Address</span><textarea required name="shipping_address" rows="3" class="mt-3 w-full resize-none border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Street address, apartment"></textarea></label>
+                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">City</span><input required name="city" type="text" autocomplete="address-level2" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="New York, Paris, London"></label>
+                        <button type="submit" class="mt-6 w-full border border-shell bg-shell px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal">Complete via WhatsApp</button>
+                    </form>
+                    <div id="order-dispatch" class="mt-8"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <aside x-cloak x-show="chatOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-50 bg-shell/14 backdrop-blur-sm" aria-modal="true" role="dialog" @click.self="chatOpen = false">
+        <div class="chat-panel absolute bottom-0 right-0 top-0 w-full max-w-[26rem] border-l border-shell/8 bg-canvas text-text sm:bottom-6 sm:right-6 sm:top-auto sm:h-[34rem] sm:border">
+            {% include "partials/chat_widget.html" %}
+        </div>
+    </aside>
+
+    <footer id="house" class="border-t border-shell/8 bg-shell px-6 py-20 text-canvas sm:px-10 lg:px-14">
+        <div class="mx-auto grid max-w-[1800px] gap-12 lg:grid-cols-[1.3fr_0.9fr_0.8fr_1fr]">
+            <div>
+                <p class="font-display text-5xl leading-none sm:text-7xl">Unsaid</p>
+                <p class="mt-8 max-w-lg text-sm leading-7 text-canvas/72">An architectural fragrance house. Extrait de Parfum compositions formulated in Paris, poured into black glass, and released in numbered drops of thirty millilitres.</p>
+            </div>
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Atelier</p>
+                <div class="mt-7 space-y-4 text-sm text-canvas/74">
+                    <p>Paris, 3ème arrondissement</p>
+                    <p>Formulation discipline</p>
+                    <p>Extrait concentration</p>
+                    <p>30ml vessels</p>
+                </div>
+            </div>
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Philosophy</p>
+                <div class="mt-7 space-y-4 text-sm text-canvas/74">
+                    <p>Silence as signature</p>
+                    <p>Material over theatre</p>
+                    <p>Presence without noise</p>
+                    <p>Restraint as excess</p>
+                </div>
+            </div>
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Correspondence</p>
+                <div class="mt-7">
+                    <form class="space-y-4" @submit.prevent>
+                        <label class="block"><span class="sr-only">Email address</span><input type="email" placeholder="Your email" class="w-full border-b border-canvas/16 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-metal placeholder:text-canvas/42"></label>
+                        <button type="submit" class="border border-canvas/18 px-5 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell">Receive releases</button>
+                    </form>
+                    <p class="mt-4 text-[0.6rem] text-canvas/46">New drops. Private events. No spam.</p>
+                </div>
+            </div>
+        </div>
+        <div class="mx-auto mt-16 flex max-w-[1800px] flex-col gap-4 border-t border-canvas/12 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-[0.62rem] uppercase tracking-[0.18em] text-canvas/46">&copy; {{ now.year }} UNSAID. All compositions are registered extrait formulations.</p>
+            <div class="flex gap-6 text-[0.62rem] uppercase tracking-[0.18em] text-canvas/46"><a href="#" class="transition duration-500 hover:text-canvas">Privacy</a><a href="#" class="transition duration-500 hover:text-canvas">Terms</a><a href="#" class="transition duration-500 hover:text-canvas">Shipping</a><a href="#" class="transition duration-500 hover:text-canvas">Contact</a></div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener("load", () => {
+            if (!window.gsap) return;
+            if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            gsap.from("[data-hero-reveal]", { autoAlpha: 0, y: 22, duration: 0.95, stagger: 0.08, ease: "power3.out" });
+            gsap.from("[data-product-card]", { autoAlpha: 0, y: 30, duration: 0.85, stagger: 0.05, ease: "power4.out", scrollTrigger: window.ScrollTrigger ? { trigger: "#collection", start: "top 82%" } : null });
+            gsap.utils.toArray("[data-text-reveal]").forEach((el) => { gsap.from(el, { autoAlpha: 0, y: 18, duration: 0.75, ease: "power3.out", scrollTrigger: window.ScrollTrigger ? { trigger: el, start: "top 88%" } : null }); });
+            document.body.addEventListener("htmx:afterSwap", (event) => {
+                if (event.detail.target && event.detail.target.id === "quiz-panel") { gsap.fromTo(event.detail.target, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: "power3.out" }); }
+            });
+            window.animateOrderDrawer = () => { gsap.fromTo(".order-panel", { x: 70, autoAlpha: 0.95 }, { x: 0, autoAlpha: 1, duration: 0.45, ease: "power4.out" }); };
+        });
+    </script>
+</body>
+</html>

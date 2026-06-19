@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">UNSAID Aura extrait bottle</title>
+  <desc id="desc">Black glass perfume bottle with soft ivory radiance.</desc>
+  <defs>
+    <radialGradient id="light" cx="50%" cy="44%" r="48%"><stop offset="0" stop-color="#f2eadb" stop-opacity="0.26"/><stop offset="0.58" stop-color="#b6a98d" stop-opacity="0.08"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#040404"/><stop offset="0.24" stop-color="#39352d"/><stop offset="0.5" stop-color="#050505"/><stop offset="0.78" stop-color="#857e6d"/><stop offset="1" stop-color="#030303"/></linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="#030303"/>
+  <circle cx="450" cy="510" r="408" fill="url(#light)"/>
+  <path d="M112 110h676v980" fill="none" stroke="#f2eadb" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M348 222h204v116H348z" fill="#040404" stroke="#ded3bd" stroke-width="3"/>
+  <path d="M306 332h288v640c0 58-47 105-105 105h-78c-58 0-105-47-105-105V332z" fill="url(#glass)" stroke="#ded3bd" stroke-width="4"/>
+  <path d="M344 382h46v530c0 70 25 108 60 132" fill="none" stroke="#fff6e6" stroke-opacity="0.14" stroke-width="8"/>
+  <rect x="353" y="604" width="194" height="212" fill="#040404" stroke="#e9dfca" stroke-width="2"/>
+  <text x="450" y="684" fill="#fff7e8" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" text-anchor="middle" letter-spacing="14">UNSAID</text>
+  <text x="450" y="735" fill="#c7bea9" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" letter-spacing="8">AURA</text>
+  <text x="450" y="774" fill="#8d8574" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+</svg>

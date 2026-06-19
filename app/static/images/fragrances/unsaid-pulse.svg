@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">UNSAID Pulse extrait bottle</title>
+  <desc id="desc">Black bottle with crisp mineral light and graphic lines.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset="0.48" stop-color="#0d1313"/><stop offset="1" stop-color="#030303"/></linearGradient>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#030303"/><stop offset="0.22" stop-color="#253131"/><stop offset="0.48" stop-color="#050606"/><stop offset="0.78" stop-color="#7f8c86"/><stop offset="1" stop-color="#030303"/></linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#bg)"/>
+  <path d="M120 874h660M160 290h580M212 120v960M690 120v960" stroke="#dfe8df" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M350 220h200v118H350z" fill="#030303" stroke="#aeb8af" stroke-width="3"/>
+  <path d="M308 330h284v646c0 55-45 100-100 100h-84c-55 0-100-45-100-100V330z" fill="url(#glass)" stroke="#aeb8af" stroke-width="4"/>
+  <path d="M360 380h34v516c0 70 20 112 56 142" fill="none" stroke="#e7fff2" stroke-opacity="0.15" stroke-width="8"/>
+  <rect x="354" y="602" width="192" height="212" fill="#040505" stroke="#dbe5dc" stroke-width="2"/>
+  <text x="450" y="682" fill="#eef7ef" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" text-anchor="middle" letter-spacing="14">UNSAID</text>
+  <text x="450" y="733" fill="#b8c4bc" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" letter-spacing="8">PULSE</text>
+  <text x="450" y="772" fill="#7f8a84" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+</svg>

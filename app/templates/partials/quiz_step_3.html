@@ -1,0 +1,28 @@
+<div class="quiz-panel min-h-[34rem] border border-black/5 bg-stone p-8 sm:p-10 lg:p-12">
+    <div class="flex items-center justify-between border-b border-black/5 pb-7">
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-clay">Consultation 03 of 03</p>
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-black/20">Imprint</p>
+    </div>
+    <div class="grid min-h-[26rem] gap-10 pt-12 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+        <div>
+            <h3 class="font-display text-4xl leading-none text-dark sm:text-5xl">What should remain?</h3>
+            <p class="mt-7 max-w-md text-sm leading-7 text-clay font-light">The final axis: cleanliness, command, or magnetic warmth.</p>
+        </div>
+        <form class="grid gap-px bg-black/5 md:grid-cols-3">
+            <input type="hidden" name="intent" value="{{ intent }}">
+            <input type="hidden" name="atmosphere" value="{{ atmosphere }}">
+            <button type="button" hx-post="/api/quiz/evaluate" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-include="closest form" hx-vals='{"imprint":"fresh"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Clean / Fresh</span>
+                <span class="mt-16 block font-display text-xl leading-tight text-dark group-hover:text-stone">Air cut with mineral clarity.</span>
+            </button>
+            <button type="button" hx-post="/api/quiz/evaluate" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-include="closest form" hx-vals='{"imprint":"spicy"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Spicy / Commanding</span>
+                <span class="mt-16 block font-display text-xl leading-tight text-dark group-hover:text-stone">Authority without volume.</span>
+            </button>
+            <button type="button" hx-post="/api/quiz/evaluate" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-include="closest form" hx-vals='{"imprint":"sweet"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Sweet / Magnetic</span>
+                <span class="mt-16 block font-display text-xl leading-tight text-dark group-hover:text-stone">Warmth that closes distance.</span>
+            </button>
+        </form>
+    </div>
+</div>

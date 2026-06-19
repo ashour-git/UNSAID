@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">UNSAID material study</title>
+  <desc id="desc">Luxury perfume ingredients arranged like a black editorial still life.</desc>
+  <rect width="1400" height="900" fill="#030303"/>
+  <path d="M100 740h1200" stroke="#e7e2d8" stroke-opacity="0.18" stroke-width="2"/>
+  <path d="M170 150h370v590H170z" fill="#e7e2d8" opacity="0.06"/>
+  <path d="M808 96h360v646H808z" fill="none" stroke="#e7e2d8" stroke-opacity="0.18" stroke-width="2"/>
+  <circle cx="378" cy="518" r="112" fill="#e7e2d8" opacity="0.11"/>
+  <circle cx="454" cy="476" r="54" fill="#c8aa80" opacity="0.18"/>
+  <path d="M844 640c112-164 174-314 188-450 92 158 82 310-30 456z" fill="#e7e2d8" opacity="0.1"/>
+  <path d="M938 680c-16-150 20-276 108-378 50 144 20 268-92 374z" fill="#c8aa80" opacity="0.14"/>
+  <text x="170" y="824" fill="#e7e2d8" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="10">MATERIAL / STUDY</text>
+</svg>

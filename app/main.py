@@ -41,71 +41,79 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     await engine.dispose()
 
 
-app = FastAPI(
-    title=settings.app_name,
-    description=(
-        "Backend commerce foundation for UNSAID, an ultra-premium "
-        "extrait de parfum house."
-    ),
-    version="0.1.0",
-    contact={"name": "UNSAID"},
-    lifespan=lifespan,
-)
-
-register_exception_handlers(app)
-
-app.add_middleware(SecurityHeadersMiddleware)
-
-if settings.enable_hsts:
-    app.add_middleware(StrictTransportSecurityMiddleware)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "HEAD", "OPTIONS"],
-    allow_headers=["*"],
-)
-
-if settings.enable_rate_limit:
-    app.add_middleware(RateLimitMiddleware)
-
-app.add_middleware(CSRFMiddleware)
-
-app.mount(
-    "/static",
-    StaticFiles(directory=settings.static_dir),
-    name="static",
-)
-app.mount(
-    "/img",
-    StaticFiles(directory=settings.campaign_img_dir),
-    name="campaign_images",
-)
-
-app.include_router(products_router, prefix="/api/v1")
-app.include_router(account_router)
-app.include_router(admin_router)
-app.include_router(orders_router)
-app.include_router(chat_router)
-app.include_router(quiz_router)
-app.include_router(analytics_router)
-app.include_router(pages_router)
-
-
-@app.get("/health", tags=["Health"])
-async def health_check() -> dict[str, Any]:
-    database_status = "healthy"
-
-    try:
-        async with engine.connect() as connection:
-            await connection.execute(text("SELECT 1"))
-    except Exception:
-        database_status = "unavailable"
-
-    return {
-        "app": settings.app_name,
-        "environment": settings.environment,
-        "status": "healthy" if database_status == "healthy" else "degraded",
-        "database": database_status,
+def create_app(*, enable_lifespan: bool = True) -> FastAPI:
+    app_kwargs: dict[str, Any] = {
+        "title": settings.app_name,
+        "description": (
+            "Backend commerce foundation for UNSAID, an ultra-premium "
+            "extrait de parfum house."
+        ),
+        "version": "0.1.0",
+        "contact": {"name": "UNSAID"},
     }
+    if enable_lifespan:
+        app_kwargs["lifespan"] = lifespan
+
+    app = FastAPI(**app_kwargs)
+
+    register_exception_handlers(app)
+
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    if settings.enable_hsts:
+        app.add_middleware(StrictTransportSecurityMiddleware)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "HEAD", "OPTIONS"],
+        allow_headers=["*"],
+    )
+
+    if settings.enable_rate_limit:
+        app.add_middleware(RateLimitMiddleware)
+
+    app.add_middleware(CSRFMiddleware)
+
+    app.mount(
+        "/static",
+        StaticFiles(directory=settings.static_dir),
+        name="static",
+    )
+    app.mount(
+        "/img",
+        StaticFiles(directory=settings.campaign_img_dir),
+        name="campaign_images",
+    )
+
+    app.include_router(products_router, prefix="/api/v1")
+    app.include_router(account_router)
+    app.include_router(admin_router)
+    app.include_router(orders_router)
+    app.include_router(chat_router)
+    app.include_router(quiz_router)
+    app.include_router(analytics_router)
+    app.include_router(pages_router)
+
+    @app.get("/health", tags=["Health"])
+    async def health_check() -> dict[str, Any]:
+        database_status = "healthy"
+
+        try:
+            async with engine.connect() as connection:
+                await connection.execute(text("SELECT 1"))
+        except Exception:
+            database_status = "unavailable"
+
+        return {
+            "app": settings.app_name,
+            "environment": settings.environment,
+            "status": "healthy" if database_status == "healthy" else "degraded",
+            "database": database_status,
+        }
+
+    return app
+
+
+app = create_app()

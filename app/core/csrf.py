@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import secrets
 from collections.abc import Awaitable, Callable
+from urllib.parse import parse_qs
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -61,10 +62,18 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         content_type = request.headers.get("content-type", "")
         if "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type:
             try:
-                form = await request.form()
-                return str(form.get(CSRF_FORM_FIELD, ""))
+                body = await request.body()
+                parsed = parse_qs(body.decode("utf-8"), keep_blank_values=True)
+                form = {
+                    key: values[-1].strip()
+                    for key, values in parsed.items()
+                    if values
+                }
+                request.state.parsed_form = form
+                return form.get(CSRF_FORM_FIELD, "")
             except Exception:
-                pass
+                request.state.parsed_form = {}
+                return ""
         return ""
 
     async def dispatch(

@@ -1,6 +1,7 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
+from app.core.csrf import generate_csrf_token
 from app.main import app
 from app.db.session import get_db, AsyncSessionLocal, engine, init_db
 
@@ -18,6 +19,28 @@ async def test_customer_signup_with_valid_data(async_client, test_session):
             "shipping_address": "123 Test St",
         },
     )
+    assert response.status_code == 303
+    assert response.headers["location"] == "/account"
+
+
+@pytest.mark.asyncio
+async def test_signup_with_csrf_cookie_and_form_token_succeeds(async_client):
+    csrf_token = generate_csrf_token()
+    async_client.cookies.set("unsaid_csrf", csrf_token)
+
+    response = await async_client.post(
+        "/account/signup",
+        data={
+            "email": "csrf-signup@example.com",
+            "password": "StrongP@ss1",
+            "full_name": "CSRF Signup",
+            "phone": "+1234567890",
+            "city": "Test City",
+            "shipping_address": "123 Test St",
+            "csrf_token": csrf_token,
+        },
+    )
+
     assert response.status_code == 303
     assert response.headers["location"] == "/account"
 

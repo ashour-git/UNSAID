@@ -43,10 +43,13 @@ html[data-theme="dark"] body {
 .text-balance { text-wrap: balance; }
 .theme-transition, .theme-transition * { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow; transition-duration: 420ms; transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1); }
 .luxury-surface { box-shadow: var(--shadow-luxury); }
+.ritual-card { border: 1px solid rgb(var(--c-canvas) / 0.08); background: rgb(var(--c-shell)); }
 html[data-theme="dark"] .dark-panel { background: radial-gradient(circle at 28% 0%, rgba(197, 157, 103, 0.12), transparent 28rem), #050403 !important; color: rgb(var(--c-ivory)) !important; }
 html[data-theme="dark"] .dark-panel [class*="text-canvas"] { color: rgb(var(--c-ivory)) !important; }
 html[data-theme="dark"] .dark-panel [class*="border-canvas"] { border-color: rgba(242, 238, 232, 0.14) !important; }
 html[data-theme="dark"] .dark-panel [class*="bg-canvas"] { background-color: rgba(242, 238, 232, 0.94) !important; color: #080706 !important; }
+html[data-theme="dark"] .ritual-card { background: rgba(242, 238, 232, 0.06); border-color: rgba(242, 238, 232, 0.12); }
+html[data-theme="dark"] .ritual-card [class*="text-canvas"] { color: rgb(var(--c-ivory)) !important; }
 html[data-theme="dark"] .dark-panel input,
 html[data-theme="dark"] .dark-panel textarea,
 html[data-theme="dark"] .dark-panel select { color: rgb(var(--c-ivory)); }

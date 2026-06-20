@@ -97,6 +97,10 @@ async def seed_admin_user(session: AsyncSession) -> None:
         return
     existing = await get_user_by_email(session, settings.admin_bootstrap_email)
     if existing is not None:
+        existing.role = "admin"
+        existing.is_active = True
+        existing.password_hash = hash_password(settings.admin_bootstrap_password)
+        await session.commit()
         return
     await create_user(
         session,

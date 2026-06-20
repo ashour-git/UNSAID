@@ -33,22 +33,25 @@ async def chat_message(
             },
         )
 
-    contexts = await retrieve_context(session, user_message)
-    await record_event(
-        session,
-        "chat_message",
-        user=current_user,
-        metadata={"message_length": len(user_message), "context_count": len(contexts)},
-    )
-    rag_prompt = build_rag_prompt(user_message, contexts)
-    messages = [{"role": "user", "content": rag_prompt}]
-
     try:
+        contexts = await retrieve_context(session, user_message)
+        await record_event(
+            session,
+            "chat_message",
+            user=current_user,
+            metadata={"message_length": len(user_message), "context_count": len(contexts)},
+        )
+        rag_prompt = build_rag_prompt(user_message, contexts)
+        messages = [{"role": "user", "content": rag_prompt}]
         response_text = await chat_completion(messages)
+        await session.commit()
     except Exception:
-        response_text = fallback_consultation(user_message, contexts)
+        response_text = fallback_consultation(user_message, [])
+        try:
+            await session.rollback()
+        except Exception:
+            pass
 
-    await session.commit()
     return templates.TemplateResponse(
         request=request,
         name="partials/chat_response.html",

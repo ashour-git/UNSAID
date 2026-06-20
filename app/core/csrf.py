@@ -11,6 +11,7 @@ from app.core.config import settings
 
 CSRF_COOKIE_NAME = "unsaid_csrf"
 CSRF_FORM_FIELD = "csrf_token"
+CSRF_HEADER_NAME = "X-CSRF-Token"
 CSRF_TOKEN_LENGTH = 32
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS", "TRACE"}
 
@@ -53,6 +54,9 @@ class CSRFMiddleware(BaseHTTPMiddleware):
     def _get_cookie_token(self, request: Request) -> str:
         return request.cookies.get(CSRF_COOKIE_NAME) or ""
 
+    def _get_header_token(self, request: Request) -> str:
+        return request.headers.get(CSRF_HEADER_NAME, "")
+
     async def _parse_form_token(self, request: Request) -> str:
         content_type = request.headers.get("content-type", "")
         if "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type:
@@ -74,9 +78,12 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             return response
 
         form_token = await self._parse_form_token(request)
+        header_token = self._get_header_token(request)
         cookie_token = self._get_cookie_token(request)
 
-        if not form_token or not cookie_token or form_token != cookie_token:
+        form_matches = form_token and hmac.compare_digest(form_token, cookie_token)
+        header_matches = header_token and hmac.compare_digest(header_token, cookie_token)
+        if not cookie_token or not (form_matches or header_matches):
             return Response("CSRF token validation failed", status_code=403)
 
         response = await call_next(request)

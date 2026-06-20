@@ -19,7 +19,7 @@ from app.models.order import Order
 from app.models.product import Product, ProductOption
 from app.models.user import User
 from app.services.analytics import build_business_metrics
-from app.services.auth import authenticate_user, require_admin
+from app.services.auth import authenticate_user, require_admin, seed_admin_user
 from app.services.insights import generate_insight_snapshot, latest_insight_snapshot
 from app.services.orders import ORDER_STATUSES, update_order_status
 from app.utils.forms import parse_form
@@ -35,6 +35,7 @@ async def admin_login_page(request: Request) -> HTMLResponse:
 @router.post("/login")
 async def admin_login(request: Request, session: AsyncSession = Depends(get_db)) -> Response:
     form = await parse_form(request)
+    await seed_admin_user(session)
     user = await authenticate_user(session, email=form.get("email", ""), password=form.get("password", ""))
     if user is None or user.role != "admin":
         return templates.TemplateResponse(

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block seo %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact &mdash; UNSAID">
+<meta property="og:description" content="Contact UNSAID for private correspondence, orders, gifting, and scent consultation.">
+<meta property="og:image" content="{{ settings.site_url }}/static/images/editorial/unsaid-hero-1.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ settings.site_url }}/static/images/editorial/unsaid-hero-1.jpg">
+<link rel="canonical" href="{{ request.url }}">
+{% endblock %}
+
+{% block title %}Contact &mdash; UNSAID{% endblock %}
+
+{% block content %}
+<section class="bg-canvas px-5 pb-20 pt-28 sm:px-8 lg:px-12">
+    <div class="mx-auto grid max-w-[1400px] gap-6 lg:grid-cols-[0.42fr_0.58fr]">
+        <div class="border border-shell/10 bg-shell p-8 text-canvas sm:p-10 lg:p-12">
+            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas/56">Contact</p>
+            <h1 class="mt-6 font-display text-4xl leading-none sm:text-5xl">Private correspondence.</h1>
+            <p class="mt-6 text-sm leading-7 text-canvas/76 sm:text-base sm:leading-8">For orders, gifting, scent consultation, or delivery questions, use the direct channels below.</p>
+            <div class="mt-10 space-y-6 text-sm leading-7 text-canvas/84">
+                <div>
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas/56">WhatsApp</p>
+                    <p class="mt-2">01005513291</p>
+                </div>
+                <div>
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas/56">Email</p>
+                    <p class="mt-2">concierge@unsaid.house</p>
+                </div>
+                <div>
+                    <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas/56">Atelier</p>
+                    <p class="mt-2">Paris, France</p>
+                </div>
+            </div>
+        </div>
+        <div class="border border-shell/10 bg-paper p-8 sm:p-10 lg:p-12">
+            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Service</p>
+            <div class="mt-6 space-y-6 text-sm leading-8 text-text sm:text-base">
+                <p>UNSAID responds to order and consultation requests through direct channels to preserve a more personal service rhythm.</p>
+                <p>Please include your city, the fragrance you are considering, and whether the order is for personal wear or gifting.</p>
+                <p>Policy and fulfilment details are available through the legal and service pages linked below.</p>
+            </div>
+            <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+                <button type="button" @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' })" class="inline-flex justify-center border border-shell bg-shell px-6 py-3.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal">Start Private Order</button>
+                <a href="/shipping" class="inline-flex justify-center border border-shell/10 px-6 py-3.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:border-shell">Shipping Details</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,5 +1,4 @@
 from typing import Any
-from urllib.parse import parse_qs
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
@@ -10,6 +9,8 @@ from app.core.media import campaign_image_for_index
 from app.core.templates import templates
 from app.db.session import get_db
 from app.models.product import Product
+from app.services.analytics import record_event
+from app.utils.forms import parse_form
 
 
 router = APIRouter(prefix="/api/quiz", tags=["Quiz"])
@@ -121,16 +122,10 @@ def select_recommendation_slug(
     )
 
 
-async def parse_quiz_form(request: Request) -> dict[str, str]:
-    body = (await request.body()).decode("utf-8")
-    form = parse_qs(body, keep_blank_values=True)
-    return {key: values[-1] for key, values in form.items() if values}
-
-
 def validate_choice(value: str, allowed: set[str], field_name: str) -> str:
     if value not in allowed:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Invalid quiz selection for {field_name}",
         )
 
@@ -148,7 +143,7 @@ async def start_quiz(request: Request) -> HTMLResponse:
 
 @router.post("/step/2", response_class=HTMLResponse)
 async def quiz_step_two(request: Request) -> HTMLResponse:
-    form = await parse_quiz_form(request)
+    form = await parse_form(request)
     intent = validate_choice(form.get("intent", ""), {"self", "gift"}, "intent")
 
     return templates.TemplateResponse(
@@ -160,7 +155,7 @@ async def quiz_step_two(request: Request) -> HTMLResponse:
 
 @router.post("/step/3", response_class=HTMLResponse)
 async def quiz_step_three(request: Request) -> HTMLResponse:
-    form = await parse_quiz_form(request)
+    form = await parse_form(request)
     intent = validate_choice(form.get("intent", ""), {"self", "gift"}, "intent")
     atmosphere = validate_choice(
         form.get("atmosphere", ""),
@@ -180,7 +175,7 @@ async def evaluate_quiz(
     request: Request,
     session: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    form = await parse_quiz_form(request)
+    form = await parse_form(request)
     intent = validate_choice(form.get("intent", ""), {"self", "gift"}, "intent")
     atmosphere = validate_choice(
         form.get("atmosphere", ""),
@@ -209,6 +204,13 @@ async def evaluate_quiz(
         "atmosphere": atmosphere,
         "imprint": imprint,
     }
+    await record_event(
+        session,
+        "quiz_completed",
+        product_id=product.id,
+        metadata={"intent": intent, "atmosphere": atmosphere, "imprint": imprint},
+    )
+    await session.commit()
     return templates.TemplateResponse(
         request=request,
         name="partials/quiz_result.html",

@@ -1,5 +1,5 @@
 from decimal import Decimal
-from urllib.parse import parse_qs, quote
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
@@ -10,22 +10,21 @@ from app.core.config import settings
 from app.core.templates import templates
 from app.db.session import get_db
 from app.models.product import Product
+from app.models.user import User
+from app.services.analytics import record_event
+from app.services.auth import get_current_user
+from app.services.orders import create_order
+from app.utils.forms import parse_form
 
 
 router = APIRouter(prefix="/api/orders", tags=["Orders"])
-
-
-async def parse_order_form(request: Request) -> dict[str, str]:
-    body = (await request.body()).decode("utf-8")
-    form = parse_qs(body, keep_blank_values=True)
-    return {key: values[-1].strip() for key, values in form.items() if values}
 
 
 def require_field(form: dict[str, str], field_name: str) -> str:
     value = form.get(field_name, "").strip()
     if not value:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Missing required order field: {field_name}",
         )
 
@@ -34,6 +33,16 @@ def require_field(form: dict[str, str], field_name: str) -> str:
 
 def normalize_whatsapp_number(phone_number: str) -> str:
     return "".join(character for character in phone_number if character.isdigit())
+
+
+def validate_phone(phone_number: str) -> str:
+    digits = "".join(c for c in phone_number if c.isdigit())
+    if len(digits) < 7:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Phone number must contain at least 7 digits",
+        )
+    return phone_number
 
 
 def format_price(price: Decimal) -> str:
@@ -83,14 +92,17 @@ def build_whatsapp_url(message: str) -> str:
 @router.post("/whatsapp", response_class=HTMLResponse)
 async def dispatch_whatsapp_order(
     request: Request,
+    current_user: User | None = Depends(get_current_user),
     session: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    form = await parse_order_form(request)
+    form = await parse_form(request)
     product_slug = require_field(form, "product_slug")
     customer_name = require_field(form, "customer_name")
-    customer_phone = require_field(form, "customer_phone")
+    customer_phone = validate_phone(require_field(form, "customer_phone"))
+    customer_email = form.get("customer_email", "").strip() or None
     shipping_address = require_field(form, "shipping_address")
     city = require_field(form, "city")
+    source = form.get("source", "site") or "site"
 
     result = await session.execute(
         select(Product).where(Product.dynamic_slug == product_slug)
@@ -111,9 +123,30 @@ async def dispatch_whatsapp_order(
         city=city,
     )
     whatsapp_url = build_whatsapp_url(message)
+    order = await create_order(
+        session,
+        product=product,
+        customer_name=customer_name,
+        customer_phone=customer_phone,
+        customer_email=customer_email,
+        shipping_address=shipping_address,
+        city=city,
+        whatsapp_url=whatsapp_url,
+        user=current_user,
+        source=source,
+    )
+    await record_event(
+        session,
+        "order_submitted",
+        user=current_user,
+        product_id=product.id,
+        order_id=order.id,
+        metadata={"source": source, "city": city},
+    )
+    await session.commit()
 
     return templates.TemplateResponse(
         request=request,
         name="partials/order_dispatch.html",
-        context={"product": product, "whatsapp_url": whatsapp_url},
+        context={"order": order, "product": product, "whatsapp_url": whatsapp_url},
     )

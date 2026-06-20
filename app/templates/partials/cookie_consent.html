@@ -1,0 +1,24 @@
+<div
+  x-data="{ show: false }"
+  x-init="show = !localStorage.getItem('unsaid-cookie-consent')"
+  x-show="show"
+  x-cloak
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  x-transition:leave="transition ease-in duration-300"
+  x-transition:leave-start="opacity-100 translate-y-0"
+  x-transition:leave-end="opacity-0 translate-y-4"
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-canvas/14 bg-shell px-6 py-5 text-canvas sm:px-8"
+>
+  <div class="mx-auto flex max-w-[1600px] flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="max-w-2xl text-sm leading-relaxed text-canvas/72">
+      This site uses essential cookies for session management and preferences. By continuing, you accept our
+      <a href="/privacy" class="underline underline-offset-4 transition duration-300 hover:text-canvas">Privacy Policy</a>.
+    </p>
+    <button
+      @click="localStorage.setItem('unsaid-cookie-consent', 'true'); show = false"
+      class="border border-canvas/18 px-6 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell"
+    >Accept</button>
+  </div>
+</div>

@@ -8,23 +8,33 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.core.config import settings
+from app.core.csrf import CSRFMiddleware
 from app.core.exceptions import register_exception_handlers
+from app.core.logging_config import setup_logging
+from app.core.rate_limit import RateLimitMiddleware
+from app.core.security_headers import SecurityHeadersMiddleware, StrictTransportSecurityMiddleware
 from app.db.knowledge_seed import seed_knowledge_documents
 from app.db.seed import seed_flagship_fragrances
 from app.db.session import AsyncSessionLocal, engine, init_db
+from app.routers.account import router as account_router
+from app.routers.admin import router as admin_router
+from app.routers.analytics import router as analytics_router
 from app.routers.chat import router as chat_router
 from app.routers.orders import router as orders_router
 from app.routers.pages import router as pages_router
 from app.routers.products import router as products_router
 from app.routers.quiz import router as quiz_router
+from app.services.auth import seed_admin_user
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    setup_logging()
     await init_db()
     async with AsyncSessionLocal() as session:
         await seed_flagship_fragrances(session)
         await seed_knowledge_documents(session)
+        await seed_admin_user(session)
 
     yield
 
@@ -44,13 +54,23 @@ app = FastAPI(
 
 register_exception_handlers(app)
 
+app.add_middleware(SecurityHeadersMiddleware)
+
+if settings.enable_hsts:
+    app.add_middleware(StrictTransportSecurityMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "HEAD", "OPTIONS"],
     allow_headers=["*"],
 )
+
+if settings.enable_rate_limit:
+    app.add_middleware(RateLimitMiddleware)
+
+app.add_middleware(CSRFMiddleware)
 
 app.mount(
     "/static",
@@ -64,9 +84,12 @@ app.mount(
 )
 
 app.include_router(products_router, prefix="/api/v1")
+app.include_router(account_router)
+app.include_router(admin_router)
 app.include_router(orders_router)
 app.include_router(chat_router)
 app.include_router(quiz_router)
+app.include_router(analytics_router)
 app.include_router(pages_router)
 
 

@@ -1,18 +1,22 @@
 ﻿<!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="UNSAID extrait de parfum. An architectural fragrance house. Six extrait compositions in black glass.">
-    <meta name="theme-color" content="#d6cec2">
-    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f2eee8">
+    <meta name="color-scheme" content="light dark">
 
     {% block seo %}
     <meta property="og:type" content="website">
     <meta property="og:title" content="UNSAID &mdash; Extrait de Parfum House">
     <meta property="og:description" content="Six extrait compositions. Black glass. Paris formulation discipline.">
     <meta property="og:site_name" content="UNSAID">
+    <meta property="og:image" content="{{ settings.site_url }}/static/images/editorial/unsaid-hero-1.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ settings.site_url }}/static/images/editorial/unsaid-hero-1.jpg">
     <link rel="canonical" href="{{ request.url }}">
     {% endblock %}
 
@@ -20,150 +24,161 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://unpkg.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/unsaid.css">
+    <link rel="stylesheet" href="/static/css/unsaid-theme.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (() => {
+            const storedTheme = localStorage.getItem("unsaid-theme");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            const theme = storedTheme || (prefersDark ? "dark" : "light");
+            const language = localStorage.getItem("unsaid-language") || "en";
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.lang = language;
+            document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+            document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#080706" : "#f2eee8");
+        })();
+    </script>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="/static/csrf.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        canvas: "#d6cec2",
-                        paper: "#eee6da",
-                        shell: "#0f0d0c",
-                        text: "#1c1917",
-                        mute: "#4f4941",
-                        soft: "#7c7368",
-                        metal: "#7d6649",
-                        line: "#b2a89a"
-                    },
-                    fontFamily: {
-                        display: ["Bodoni Moda", "Georgia", "serif"],
-                        sans: ["Manrope", "Helvetica Neue", "Arial", "sans-serif"]
-                    },
-                    letterSpacing: {
-                        label: "0.2em",
-                        tight: "0.08em"
-                    }
-                }
+        window.unsaidShellState = () => ({
+            mobileMenuOpen: false,
+            drawerOpen: false,
+            chatOpen: false,
+            theme: document.documentElement.dataset.theme || "light",
+            language: document.documentElement.lang || "en",
+            scrolled: false,
+            showBackToTop: false,
+            selectedProduct: {
+                slug: "",
+                name: "UNSAID Selection",
+                concentration: "Extrait de Parfum",
+                price: "",
+                volume: "30ml"
+            },
+            init() {
+                this.setTheme(this.theme);
+                this.setLanguage(this.language);
+                this.scrolled = window.scrollY > 12;
+                this.showBackToTop = window.scrollY > 500;
+                window.addEventListener("scroll", () => {
+                    this.scrolled = window.scrollY > 12;
+                    this.showBackToTop = window.scrollY > 500;
+                });
+            },
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.dataset.theme = theme;
+                localStorage.setItem("unsaid-theme", theme);
+                document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#080706" : "#f2eee8");
+            },
+            toggleTheme() {
+                this.setTheme(this.theme === "dark" ? "light" : "dark");
+            },
+            setLanguage(language) {
+                this.language = language;
+                document.documentElement.lang = language;
+                document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+                localStorage.setItem("unsaid-language", language);
+                window.applyUnsaidLanguage && window.applyUnsaidLanguage(language);
+            },
+            toggleLanguage() {
+                this.setLanguage(this.language === "ar" ? "en" : "ar");
+            },
+            openCheckout(product) {
+                this.selectedProduct = product;
+                this.drawerOpen = true;
+                this.$nextTick(() => window.animateOrderDrawer && window.animateOrderDrawer());
+            },
+            toggleMobileMenu() {
+                this.mobileMenuOpen = !this.mobileMenuOpen;
+            },
+            closeMobileMenu() {
+                this.mobileMenuOpen = false;
             }
-        };
+        });
     </script>
-
-    <style>
-        [x-cloak] { display: none !important; }
-        body { background: #d6cec2; }
-        ::selection { background: #0f0d0c; color: #d6cec2; }
-        :focus-visible { outline: 2px solid #7d6649; outline-offset: 3px; }
-        .skip-link { position: absolute; top: -100%; left: 1rem; z-index: 100; padding: 0.75rem 1.25rem; background: #0f0d0c; color: #d6cec2; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; transition: top 0.3s; }
-        .skip-link:focus { top: 1rem; }
-        .text-balance { text-wrap: balance; }
-        .image-frame { position: relative; overflow: hidden; }
-        .image-frame img { transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.7s ease; }
-        .image-frame:hover img { transform: scale(1.03); }
-        .quiz-panel { transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1); }
-        .order-panel, .chat-panel { will-change: transform; }
-        .htmx-swapping { opacity: 0; transform: translateY(0.75rem); }
-        .htmx-settling { opacity: 1; transform: translateY(0); }
-        .htmx-indicator { opacity: 0; transition: opacity 0.2s ease; }
-        .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { opacity: 1; }
-        @media (max-width: 767px) {
-            .mobile-sticky-cta {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 30;
-                padding: 0.75rem 1rem;
-                background: rgba(214,206,194,0.96);
-                border-top: 1px solid rgba(15,13,12,0.08);
-                backdrop-filter: blur(18px);
-            }
-        }
-    </style>
 </head>
 <body
-    x-data="{
-        mobileMenuOpen: false,
-        drawerOpen: false,
-        chatOpen: false,
-        scrolled: false,
-        showBackToTop: false,
-        selectedProduct: { slug: '', name: 'UNSAID Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' },
-        openCheckout(product) {
-            this.selectedProduct = product;
-            this.drawerOpen = true;
-            this.$nextTick(() => window.animateOrderDrawer && window.animateOrderDrawer());
-        },
-        toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen; },
-        closeMobileMenu() { this.mobileMenuOpen = false; }
-    }"
-    x-init="scrolled = window.scrollY > 18; showBackToTop = window.scrollY > 600; window.addEventListener('scroll', () => { scrolled = window.scrollY > 18; showBackToTop = window.scrollY > 600; });"
-    class="min-h-screen bg-canvas font-sans text-text antialiased"
+    x-data="unsaidShellState()"
+    class="theme-transition min-h-screen bg-canvas font-sans text-text antialiased"
 >
     <a href="#main-content" class="skip-link">Skip to content</a>
 
     <nav :class="scrolled ? 'border-shell/8 bg-canvas/94 backdrop-blur-xl' : 'border-transparent bg-transparent'" class="fixed inset-x-0 top-0 z-40 border-b transition-all duration-700">
-        <div class="mx-auto flex h-20 max-w-[1800px] items-center justify-between px-5 sm:px-8 lg:px-12">
-            <a href="/" class="font-display text-[1.85rem] leading-none text-shell sm:text-[2.15rem]">Unsaid</a>
-            <div class="hidden items-center gap-8 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-mute md:flex">
-                <a href="/#collection" class="transition duration-500 hover:text-shell">Collection</a>
-                <a href="/#discovery" class="transition duration-500 hover:text-shell">Discovery</a>
-                <a href="/#ritual" class="transition duration-500 hover:text-shell">Ritual</a>
+        <div class="site-nav-inner mx-auto flex h-20 max-w-[1600px] items-center justify-between px-5 sm:px-8 lg:px-12">
+            <a href="/" class="font-display text-[2rem] leading-none text-shell sm:text-[2.2rem]">Unsaid</a>
+            <div class="site-nav-links hidden items-center gap-8 text-sm text-mute md:flex">
+                <a href="/#collection" class="transition duration-500 hover:text-shell" data-i18n="nav.collection">Collection</a>
+                <a href="/#discovery" class="transition duration-500 hover:text-shell" data-i18n="nav.consultation">Consultation</a>
+                <a href="/contact" class="transition duration-500 hover:text-shell" data-i18n="nav.contact">Contact</a>
+                <a href="/account/login" class="transition duration-500 hover:text-shell" data-i18n="nav.account">Account</a>
             </div>
             <div class="flex items-center gap-3">
-                <button @click="chatOpen = !chatOpen" class="hidden border border-shell/10 px-4 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute transition duration-500 hover:border-shell hover:text-shell sm:inline-flex">Consult</button>
-                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' })" class="hidden border border-shell bg-shell px-5 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal sm:inline-flex">Enquire</button>
-                <button @click="toggleMobileMenu()" class="inline-flex items-center gap-2 border border-shell/10 px-3 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-shell transition duration-500 hover:border-shell md:hidden"><span x-show="!mobileMenuOpen">Menu</span><span x-show="mobileMenuOpen">Close</span></button>
+                <button @click="toggleLanguage()" :aria-label="language === 'ar' ? 'Use English' : 'Use Arabic'" class="hidden border border-shell/10 bg-paper/60 px-3.5 py-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-shell backdrop-blur-xl transition duration-500 hover:border-metal hover:text-metal sm:inline-flex">
+                    <span x-text="language === 'ar' ? 'EN' : 'AR'"></span>
+                </button>
+                <button @click="toggleTheme()" :aria-label="theme === 'dark' ? 'Use light theme' : 'Use dark theme'" class="theme-toggle-mark hidden items-center gap-2 border border-shell/10 bg-paper/60 px-3.5 py-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-shell backdrop-blur-xl transition duration-500 hover:border-metal hover:text-metal sm:inline-flex">
+                    <span class="h-1.5 w-1.5 rounded-full bg-metal"></span>
+                    <span x-text="theme === 'dark' ? 'Light' : 'Dark'"></span>
+                </button>
+                <button @click="chatOpen = !chatOpen" class="hidden text-sm text-mute transition duration-500 hover:text-shell sm:inline-flex" data-i18n="nav.consult">Consult</button>
+                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' })" class="hidden border border-shell bg-shell px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-metal hover:border-metal sm:inline-flex" data-i18n="nav.enquire">Enquire</button>
+                <button @click="toggleMobileMenu()" class="inline-flex items-center gap-2 border border-shell/10 px-3 py-2.5 text-[0.68rem] font-semibold text-shell transition duration-500 hover:border-shell md:hidden"><span x-show="!mobileMenuOpen" data-i18n="nav.menu">Menu</span><span x-show="mobileMenuOpen" data-i18n="nav.close">Close</span></button>
             </div>
         </div>
     </nav>
 
     <div x-cloak x-show="mobileMenuOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-30 bg-canvas/97 backdrop-blur-xl md:hidden" @click.self="closeMobileMenu()">
         <div class="flex h-full flex-col items-center justify-center gap-8 text-center">
-            <a href="/#collection" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Collection</a>
-            <a href="/#discovery" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Discovery</a>
-            <a href="/#ritual" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell">Ritual</a>
+            <a href="/#collection" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell" data-i18n="nav.collection">Collection</a>
+            <a href="/#discovery" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell" data-i18n="nav.consultation">Consultation</a>
+            <a href="/contact" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell" data-i18n="nav.contact">Contact</a>
+            <a href="/account/login" @click="closeMobileMenu()" class="font-display text-4xl leading-none text-shell" data-i18n="nav.account">Account</a>
             <div class="mt-4 flex flex-col gap-4">
-                <button @click="chatOpen = !chatOpen; closeMobileMenu()" class="border border-shell/10 px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-shell">Consult AI</button>
-                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' }); closeMobileMenu()" class="border border-shell bg-shell px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-canvas">Enquire</button>
+                <button @click="toggleLanguage()" class="border border-shell/10 px-6 py-3 text-sm text-shell"><span x-text="language === 'ar' ? 'English' : 'العربية'"></span></button>
+                <button @click="toggleTheme()" class="border border-shell/10 px-6 py-3 text-sm text-shell"><span x-text="theme === 'dark' ? 'Light Mode' : 'Dark Mode'"></span></button>
+                <button @click="chatOpen = !chatOpen; closeMobileMenu()" class="border border-shell/10 px-6 py-3 text-sm text-shell" data-i18n="nav.consultAi">Consult AI</button>
+                <button @click="openCheckout({ slug: '', name: 'Concierge Selection', concentration: 'Extrait de Parfum', price: '', volume: '30ml' }); closeMobileMenu()" class="border border-shell bg-shell px-6 py-3 text-sm text-canvas" data-i18n="nav.enquire">Enquire</button>
             </div>
         </div>
     </div>
 
     <main id="main-content">{% block content %}{% endblock %}</main>
 
-    <button x-cloak x-show="showBackToTop" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 z-30 border border-shell/10 bg-canvas/92 px-4 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute backdrop-blur-xl transition duration-500 hover:border-shell hover:text-shell">Top</button>
+    <button x-cloak x-show="showBackToTop" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 z-30 border border-shell/10 bg-canvas/92 px-4 py-3 text-[0.72rem] text-mute backdrop-blur-xl transition duration-500 hover:border-shell hover:text-shell">Top</button>
 
     <aside x-cloak x-show="drawerOpen" x-transition.opacity.duration.400ms class="fixed inset-0 z-50 bg-shell/18 backdrop-blur-sm" aria-modal="true" role="dialog">
         <div class="order-panel absolute inset-y-0 right-0 w-full max-w-[34rem] border-l border-shell/8 bg-canvas text-text">
             <div class="flex h-full flex-col">
                 <div class="flex items-center justify-between border-b border-shell/8 px-6 py-6 sm:px-8 sm:py-7">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-shell">Private Order</p>
-                    <button @click="drawerOpen = false" class="text-xs uppercase tracking-[0.18em] text-mute transition duration-500 hover:text-shell">Close</button>
+                    <p class="text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-shell" data-i18n="order.privateOrder">Private Order</p>
+                    <button @click="drawerOpen = false" class="text-sm text-mute transition duration-500 hover:text-shell" data-i18n="nav.close">Close</button>
                 </div>
                 <div class="flex-1 overflow-y-auto px-6 py-8 sm:px-8">
                     <div class="border border-shell/8 bg-paper p-5 sm:p-6">
-                        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">Selected Fragrance</p>
-                        <p class="mt-5 font-display text-3xl leading-none text-shell" x-text="selectedProduct.name"></p>
-                        <p class="mt-5 text-xs uppercase tracking-[0.18em] text-mute"><span x-text="selectedProduct.volume"></span>&nbsp;&nbsp;/&nbsp;&nbsp;<span x-text="selectedProduct.concentration"></span></p>
-                        <p class="mt-4 text-sm text-metal" x-show="selectedProduct.price"><span x-text="selectedProduct.price"></span></p>
+                        <p class="text-[0.72rem] text-mute" data-i18n="order.selectedFragrance">Selected fragrance</p>
+                        <p class="mt-4 font-display text-3xl leading-none text-shell" x-text="selectedProduct.name"></p>
+                        <p class="mt-4 text-sm text-mute"><span x-text="selectedProduct.volume"></span> / <span x-text="selectedProduct.concentration"></span></p>
+                        <p class="mt-3 text-sm text-metal" x-show="selectedProduct.price"><span x-text="selectedProduct.price"></span></p>
                     </div>
                     <form id="order-form" hx-post="/api/orders/whatsapp" hx-target="#order-dispatch" hx-swap="innerHTML" class="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
                         <input type="hidden" name="product_slug" :value="selectedProduct.slug">
-                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Full Name</span><input required name="customer_name" type="text" autocomplete="name" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Your name"></label>
-                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Phone Number</span><input required name="customer_phone" type="tel" autocomplete="tel" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="+1 212 555 0182"></label>
-                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">Shipping Address</span><textarea required name="shipping_address" rows="3" class="mt-3 w-full resize-none border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Street address, apartment"></textarea></label>
-                        <label class="block"><span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-mute">City</span><input required name="city" type="text" autocomplete="address-level2" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="New York, Paris, London"></label>
-                        <button type="submit" class="mt-6 w-full border border-shell bg-shell px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-metal hover:border-metal">Complete via WhatsApp</button>
+                        <input type="hidden" name="source" value="drawer">
+                        <label class="block"><span class="text-[0.72rem] text-mute" data-i18n="order.fullName">Full name</span><input required name="customer_name" type="text" autocomplete="name" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Your name" data-i18n-placeholder="order.namePlaceholder"></label>
+                        <label class="block"><span class="text-[0.72rem] text-mute" data-i18n="order.email">Email</span><input name="customer_email" type="email" autocomplete="email" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="you@example.com"></label>
+                        <label class="block"><span class="text-[0.72rem] text-mute" data-i18n="order.phone">Phone number</span><input required name="customer_phone" type="tel" autocomplete="tel" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="01005513291"></label>
+                        <label class="block"><span class="text-[0.72rem] text-mute" data-i18n="order.shippingAddress">Shipping address</span><textarea required name="shipping_address" rows="3" class="mt-3 w-full resize-none border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="Street address, apartment" data-i18n-placeholder="order.addressPlaceholder"></textarea></label>
+                        <label class="block"><span class="text-[0.72rem] text-mute" data-i18n="order.city">City</span><input required name="city" type="text" autocomplete="address-level2" class="mt-3 w-full border-b border-shell/10 bg-transparent px-1 py-4 text-sm text-shell outline-none transition duration-500 focus:border-metal placeholder:text-soft" placeholder="City" data-i18n-placeholder="order.city"></label>
+                        <button type="submit" class="mt-6 w-full border border-shell bg-shell px-6 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-metal hover:border-metal" data-i18n="order.completeWhatsapp">Complete via WhatsApp</button>
                     </form>
                     <div id="order-dispatch" class="mt-8"></div>
                 </div>
@@ -177,60 +192,355 @@
         </div>
     </aside>
 
-    <footer id="house" class="border-t border-shell/8 bg-shell px-6 py-20 text-canvas sm:px-10 lg:px-14">
-        <div class="mx-auto grid max-w-[1800px] gap-12 lg:grid-cols-[1.3fr_0.9fr_0.8fr_1fr]">
-            <div>
+    <footer id="house" class="dark-panel border-t border-shell/8 bg-shell px-6 py-20 text-canvas sm:px-10 lg:px-14">
+        <div class="site-footer-grid mx-auto grid max-w-[1600px] gap-12 lg:grid-cols-[1.3fr_0.9fr_0.8fr_1fr]">
+            <div class="site-footer-copy">
                 <p class="font-display text-5xl leading-none sm:text-7xl">Unsaid</p>
-                <p class="mt-8 max-w-lg text-sm leading-7 text-canvas/72">An architectural fragrance house. Extrait de Parfum compositions formulated in Paris, poured into black glass, and released in numbered drops of thirty millilitres.</p>
+                <p class="mt-8 max-w-lg text-sm leading-7 text-canvas/72" data-i18n="footer.description">An architectural fragrance house. Extrait de Parfum compositions formulated in Paris, poured into black glass, and released in numbered drops of thirty millilitres.</p>
             </div>
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Atelier</p>
+            <div class="site-footer-copy">
+                <p class="text-[0.72rem] text-canvas/68" data-i18n="footer.atelier">Atelier</p>
                 <div class="mt-7 space-y-4 text-sm text-canvas/74">
-                    <p>Paris, 3ème arrondissement</p>
-                    <p>Formulation discipline</p>
-                    <p>Extrait concentration</p>
-                    <p>30ml vessels</p>
+                    <p data-i18n="footer.paris">Paris, 3ème arrondissement</p>
+                    <p data-i18n="footer.formulation">Formulation discipline</p>
+                    <p data-i18n="footer.extrait">Extrait concentration</p>
+                    <p data-i18n="footer.vessels">30ml vessels</p>
                 </div>
             </div>
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Philosophy</p>
+            <div class="site-footer-copy">
+                <p class="text-[0.72rem] text-canvas/68" data-i18n="footer.philosophy">Philosophy</p>
                 <div class="mt-7 space-y-4 text-sm text-canvas/74">
-                    <p>Silence as signature</p>
-                    <p>Material over theatre</p>
-                    <p>Presence without noise</p>
-                    <p>Restraint as excess</p>
+                    <p data-i18n="footer.silence">Silence as signature</p>
+                    <p data-i18n="footer.material">Material over theatre</p>
+                    <p data-i18n="footer.presence">Presence without noise</p>
+                    <p data-i18n="footer.restraint">Restraint as excess</p>
                 </div>
             </div>
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-canvas/72">Correspondence</p>
+            <div class="site-footer-copy">
+                <p class="text-[0.72rem] text-canvas/68" data-i18n="footer.correspondence">Correspondence</p>
                 <div class="mt-7">
-                    <form class="space-y-4" @submit.prevent>
-                        <label class="block"><span class="sr-only">Email address</span><input type="email" placeholder="Your email" class="w-full border-b border-canvas/16 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-metal placeholder:text-canvas/42"></label>
-                        <button type="submit" class="border border-canvas/18 px-5 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell">Receive releases</button>
+                    <form class="space-y-4" hx-post="/api/analytics/newsletter" hx-target="#newsletter-response" hx-swap="innerHTML">
+                        <input type="hidden" name="source" value="footer">
+                        <label class="block"><span class="sr-only" data-i18n="footer.emailAddress">Email address</span><input name="email" type="email" required placeholder="Your email" data-i18n-placeholder="footer.emailPlaceholder" class="w-full border-b border-canvas/16 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-metal placeholder:text-canvas/42"></label>
+                        <button type="submit" class="border border-canvas/18 px-5 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell" data-i18n="footer.receive">Receive releases</button>
                     </form>
-                    <p class="mt-4 text-[0.6rem] text-canvas/46">New drops. Private events. No spam.</p>
+                    <div id="newsletter-response" class="mt-3"></div>
+                    <p class="mt-4 text-[0.65rem] text-canvas/46" data-i18n="footer.noSpam">New drops. Private events. No spam.</p>
                 </div>
             </div>
         </div>
-        <div class="mx-auto mt-16 flex max-w-[1800px] flex-col gap-4 border-t border-canvas/12 pt-8 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-[0.62rem] uppercase tracking-[0.18em] text-canvas/46">&copy; {{ now.year }} UNSAID. All compositions are registered extrait formulations.</p>
-            <div class="flex gap-6 text-[0.62rem] uppercase tracking-[0.18em] text-canvas/46"><a href="#" class="transition duration-500 hover:text-canvas">Privacy</a><a href="#" class="transition duration-500 hover:text-canvas">Terms</a><a href="#" class="transition duration-500 hover:text-canvas">Shipping</a><a href="#" class="transition duration-500 hover:text-canvas">Contact</a></div>
+        <div class="site-footer-bottom mx-auto mt-16 flex max-w-[1600px] flex-col gap-4 border-t border-canvas/12 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-[0.72rem] text-canvas/46">&copy; {{ now.year }} UNSAID. <span data-i18n="footer.rights">All compositions are registered extrait formulations.</span></p>
+            <div class="flex gap-6 text-[0.72rem] text-canvas/46"><a href="/privacy" class="transition duration-500 hover:text-canvas" data-i18n="footer.privacy">Privacy</a><a href="/terms" class="transition duration-500 hover:text-canvas" data-i18n="footer.terms">Terms</a><a href="/shipping" class="transition duration-500 hover:text-canvas" data-i18n="footer.shipping">Shipping</a><a href="/contact" class="transition duration-500 hover:text-canvas" data-i18n="nav.contact">Contact</a></div>
         </div>
     </footer>
 
     <script>
-        window.addEventListener("load", () => {
-            if (!window.gsap) return;
-            if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
-            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-            gsap.from("[data-hero-reveal]", { autoAlpha: 0, y: 22, duration: 0.95, stagger: 0.08, ease: "power3.out" });
-            gsap.from("[data-product-card]", { autoAlpha: 0, y: 30, duration: 0.85, stagger: 0.05, ease: "power4.out", scrollTrigger: window.ScrollTrigger ? { trigger: "#collection", start: "top 82%" } : null });
-            gsap.utils.toArray("[data-text-reveal]").forEach((el) => { gsap.from(el, { autoAlpha: 0, y: 18, duration: 0.75, ease: "power3.out", scrollTrigger: window.ScrollTrigger ? { trigger: el, start: "top 88%" } : null }); });
-            document.body.addEventListener("htmx:afterSwap", (event) => {
-                if (event.detail.target && event.detail.target.id === "quiz-panel") { gsap.fromTo(event.detail.target, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: "power3.out" }); }
+        window.UNSAID_TRANSLATIONS = {
+            en: {
+                "nav.collection": "Collection",
+                "nav.consultation": "Consultation",
+                "nav.contact": "Contact",
+                "nav.account": "Account",
+                "nav.consult": "Consult",
+                "nav.consultAi": "Consult AI",
+                "nav.enquire": "Enquire",
+                "nav.menu": "Menu",
+                "nav.close": "Close",
+                "home.eyebrow": "UNSAID / Paris / Extrait",
+                "home.heroTitle": "Six quiet compositions in black glass.",
+                "home.heroCopy": "A fragrance house built around restraint, structure, and memory. The bottle carries the message before the notes do.",
+                "home.viewCollection": "View Collection",
+                "home.consultPerfumer": "Consult The Perfumer",
+                "home.heroBadge": "Black glass / dominant object",
+                "home.collectionTitle": "Six bottle-led signatures with distinct temperatures.",
+                "order.privateOrder": "Private Order",
+                "order.selectedFragrance": "Selected fragrance",
+                "order.fullName": "Full name",
+                "order.namePlaceholder": "Your name",
+                "order.email": "Email",
+                "order.phone": "Phone number",
+                "order.shippingAddress": "Shipping address",
+                "order.addressPlaceholder": "Street address, apartment",
+                "order.city": "City",
+                "order.completeWhatsapp": "Complete via WhatsApp",
+                "home.architecture": "Architecture",
+                "home.secure": "Secure",
+                "home.concentration": "Extrait de Parfum",
+                "home.privateEdition": "Private edition",
+                "home.objectStudy": "Object study",
+                "home.noteSignal": "Note signal",
+                "home.acquire": "Acquire",
+                "home.consultationEyebrow": "Private consultation",
+                "home.consultationTitle": "Use the consultant when the collection needs narrowing.",
+                "home.consultationCopy": "The assistant is there to refine taste, not replace the bottle-led experience.",
+                "home.ritual": "The ritual",
+                "home.ritualOne": "Skin, fabric, silence.",
+                "home.ritualTwo": "Let the material speak last.",
+                "home.ritualThree": "The room remembers restraint.",
+                "product.subtitle.unsaid-apex": "The summit of quiet dominance",
+                "product.subtitle.unsaid-chapter-i": "The first page of a lasting signature",
+                "product.subtitle.unsaid-pulse": "Electric warmth beneath tailored restraint",
+                "product.subtitle.unsaid-aura": "Radiance held close to the skin",
+                "product.subtitle.unsaid-echo": "A smoky trace that refuses to fade",
+                "product.subtitle.unsaid-velvet": "Texture, warmth, and after-dark elegance",
+                "quiz.step1": "Consultation 01 of 03",
+                "quiz.intent": "Intent",
+                "quiz.step1Title": "Who is this presence for?",
+                "quiz.step1Copy": "We begin with motive. Identity wears differently from ceremony.",
+                "quiz.self": "Self-Identity",
+                "quiz.selfCopy": "A private signature.",
+                "quiz.gift": "High-End Gifting",
+                "quiz.giftCopy": "A controlled gesture.",
+                "quiz.step2": "Consultation 02 of 03",
+                "quiz.atmosphere": "Atmosphere",
+                "quiz.step2Title": "Where should it dominate?",
+                "quiz.step2Copy": "Choose the room before choosing the material. Performance is entirely contextual.",
+                "quiz.day": "Day / Office-Safe",
+                "quiz.dayCopy": "Precise, composed, close.",
+                "quiz.night": "Nocturnal / Date-Night",
+                "quiz.nightCopy": "Dark, magnetic, remembered.",
+                "quiz.step3": "Consultation 03 of 03",
+                "quiz.imprint": "Imprint",
+                "quiz.step3Title": "What should remain?",
+                "quiz.step3Copy": "The final axis: cleanliness, command, or magnetic warmth.",
+                "quiz.fresh": "Clean / Fresh",
+                "quiz.freshCopy": "Air cut with mineral clarity.",
+                "quiz.spicy": "Spicy / Commanding",
+                "quiz.spicyCopy": "Authority without volume.",
+                "quiz.sweet": "Sweet / Magnetic",
+                "quiz.sweetCopy": "Warmth that closes distance.",
+                "quiz.calibrated": "Calibrated recommendation",
+                "quiz.top": "Top",
+                "quiz.heart": "Heart",
+                "quiz.base": "Base",
+                "quiz.view": "View",
+                "quiz.orderRecommendation": "Order Recommendation",
+                "quiz.recalibrate": "Recalibrate",
+                "quiz.yourMatch": "Your match",
+                "chat.title": "UNSAID Consultant",
+                "chat.subtitle": "Private fragrance guidance",
+                "chat.begin": "Begin with a direction",
+                "chat.fresh": "Fresh office",
+                "chat.dark": "Dark evening",
+                "chat.gift": "Refined gift",
+                "chat.welcome": "Welcome to UNSAID. Tell me the atmosphere, the setting, or the impression you want to leave, and I will narrow the collection with precision.",
+                "chat.placeholder": "Describe your ideal scent...",
+                "chat.send": "Send",
+                "chat.thinking": "Consultant is thinking...",
+                "footer.description": "An architectural fragrance house. Extrait de Parfum compositions formulated in Paris, poured into black glass, and released in numbered drops of thirty millilitres.",
+                "footer.atelier": "Atelier",
+                "footer.paris": "Paris, 3ème arrondissement",
+                "footer.formulation": "Formulation discipline",
+                "footer.extrait": "Extrait concentration",
+                "footer.vessels": "30ml vessels",
+                "footer.philosophy": "Philosophy",
+                "footer.silence": "Silence as signature",
+                "footer.material": "Material over theatre",
+                "footer.presence": "Presence without noise",
+                "footer.restraint": "Restraint as excess",
+                "footer.correspondence": "Correspondence",
+                "footer.emailAddress": "Email address",
+                "footer.emailPlaceholder": "Your email",
+                "footer.receive": "Receive releases",
+                "footer.noSpam": "New drops. Private events. No spam.",
+                "footer.rights": "All compositions are registered extrait formulations.",
+                "footer.privacy": "Privacy",
+                "footer.terms": "Terms",
+                "footer.shipping": "Shipping",
+                "account.privateAccount": "Private account",
+                "account.signIn": "Sign in.",
+                "account.email": "Email",
+                "account.password": "Password",
+                "account.enterAccount": "Enter account",
+                "account.noAccount": "No account yet?",
+                "account.createOne": "Create one",
+                "account.privateClient": "Private client record",
+                "account.createAccount": "Create account.",
+                "account.fullName": "Full name",
+                "account.phone": "Phone",
+                "account.city": "City",
+                "account.shippingAddress": "Default shipping address",
+                "account.receiveReleases": "Receive release notes and private events.",
+                "account.signOut": "Sign out",
+                "account.conciergeDetails": "Concierge details",
+                "account.recentOrders": "Recent orders",
+                "account.viewAll": "View all",
+                "account.account": "Account",
+                "account.orderHistory": "Order history.",
+                "account.backToOrders": "Back to orders",
+                "account.status": "Status",
+                "account.composition": "Composition",
+                "account.openWhatsapp": "Open WhatsApp"
+            },
+            ar: {
+                "nav.collection": "المجموعة",
+                "nav.consultation": "الاستشارة",
+                "nav.contact": "تواصل",
+                "nav.account": "الحساب",
+                "nav.consult": "استشارة",
+                "nav.consultAi": "استشارة ذكية",
+                "nav.enquire": "استفسار",
+                "nav.menu": "القائمة",
+                "nav.close": "إغلاق",
+                "home.eyebrow": "أنسيد / باريس / إكستريت",
+                "home.heroTitle": "ست تركيبات هادئة داخل زجاج أسود.",
+                "home.heroCopy": "دار عطور مبنية على التحفظ والبنية والذاكرة. الزجاجة تقول الرسالة قبل أن تفعل النوتات.",
+                "home.viewCollection": "عرض المجموعة",
+                "home.consultPerfumer": "استشر خبير العطور",
+                "home.heroBadge": "زجاج أسود / حضور مركزي",
+                "home.collectionTitle": "ست توقيعات تقودها الزجاجة بدرجات حسية مختلفة.",
+                "order.privateOrder": "طلب خاص",
+                "order.selectedFragrance": "العطر المختار",
+                "order.fullName": "الاسم الكامل",
+                "order.namePlaceholder": "اسمك",
+                "order.email": "البريد الإلكتروني",
+                "order.phone": "رقم الهاتف",
+                "order.shippingAddress": "عنوان الشحن",
+                "order.addressPlaceholder": "الشارع، رقم المنزل، تفاصيل الشقة",
+                "order.city": "المدينة",
+                "order.completeWhatsapp": "إتمام الطلب عبر واتساب",
+                "home.architecture": "البنية العطرية",
+                "home.secure": "احجز",
+                "home.concentration": "عطر إكستريت مركز",
+                "home.privateEdition": "إصدار خاص",
+                "home.objectStudy": "دراسة الزجاجة",
+                "home.noteSignal": "الإشارة العطرية",
+                "home.acquire": "الاقتناء",
+                "home.consultationEyebrow": "استشارة خاصة",
+                "home.consultationTitle": "استخدم المستشار عندما تحتاج المجموعة إلى تضييق الاختيار.",
+                "home.consultationCopy": "المساعد هنا لتنقية الذوق، لا لاستبدال تجربة الزجاجة نفسها.",
+                "home.ritual": "الطقس",
+                "home.ritualOne": "البشرة، القماش، الصمت.",
+                "home.ritualTwo": "دع المادة تتحدث أخيرا.",
+                "home.ritualThree": "الغرفة تتذكر التحفظ.",
+                "product.subtitle.unsaid-apex": "قمة الحضور الهادئ والمسيطر",
+                "product.subtitle.unsaid-chapter-i": "الصفحة الأولى لتوقيع يدوم",
+                "product.subtitle.unsaid-pulse": "دفء كهربائي تحت انضباط مصقول",
+                "product.subtitle.unsaid-aura": "إشراقة قريبة من البشرة",
+                "product.subtitle.unsaid-echo": "أثر دخاني يرفض أن يتلاشى",
+                "product.subtitle.unsaid-velvet": "ملمس ودفء وأناقة ليلية",
+                "quiz.step1": "الاستشارة 01 من 03",
+                "quiz.intent": "النية",
+                "quiz.step1Title": "لمن سيكون هذا الحضور؟",
+                "quiz.step1Copy": "نبدأ بالدافع. التوقيع الشخصي يختلف عن الهدية الرسمية.",
+                "quiz.self": "توقيع شخصي",
+                "quiz.selfCopy": "بصمة خاصة.",
+                "quiz.gift": "هدية راقية",
+                "quiz.giftCopy": "لفتة محسوبة.",
+                "quiz.step2": "الاستشارة 02 من 03",
+                "quiz.atmosphere": "الأجواء",
+                "quiz.step2Title": "أين يجب أن يترك أثره؟",
+                "quiz.step2Copy": "اختر المكان قبل المادة. الأداء مرتبط بالسياق بالكامل.",
+                "quiz.day": "نهاري / مناسب للعمل",
+                "quiz.dayCopy": "دقيق، متزن، قريب.",
+                "quiz.night": "ليلي / موعد خاص",
+                "quiz.nightCopy": "داكن، جاذب، لا ينسى.",
+                "quiz.step3": "الاستشارة 03 من 03",
+                "quiz.imprint": "الأثر",
+                "quiz.step3Title": "ما الذي يجب أن يبقى؟",
+                "quiz.step3Copy": "المحور الأخير: النقاء، السيطرة، أو الدفء الجاذب.",
+                "quiz.fresh": "نظيف / منعش",
+                "quiz.freshCopy": "هواء مشذوب بصفاء معدني.",
+                "quiz.spicy": "حار / آمر",
+                "quiz.spicyCopy": "هيبة بلا ضجيج.",
+                "quiz.sweet": "حلو / جاذب",
+                "quiz.sweetCopy": "دفء يقرب المسافة.",
+                "quiz.calibrated": "توصية مضبوطة",
+                "quiz.top": "البداية",
+                "quiz.heart": "القلب",
+                "quiz.base": "القاعدة",
+                "quiz.view": "عرض",
+                "quiz.orderRecommendation": "طلب التوصية",
+                "quiz.recalibrate": "إعادة المعايرة",
+                "quiz.yourMatch": "اختيارك الأنسب",
+                "chat.title": "مستشار UNSAID",
+                "chat.subtitle": "إرشاد عطري خاص",
+                "chat.begin": "ابدأ باتجاه",
+                "chat.fresh": "انتعاش للعمل",
+                "chat.dark": "مساء داكن",
+                "chat.gift": "هدية راقية",
+                "chat.welcome": "مرحبا بك في UNSAID. أخبرني بالأجواء أو المناسبة أو الانطباع الذي تريد تركه، وسأضيق المجموعة بدقة.",
+                "chat.placeholder": "صف عطرك المثالي...",
+                "chat.send": "إرسال",
+                "chat.thinking": "المستشار يفكر...",
+                "footer.description": "دار عطور معمارية تقدم تركيبات Extrait de Parfum مصاغة في باريس، داخل زجاج أسود، بإصدارات محدودة من ثلاثين مليلتر.",
+                "footer.atelier": "المشغل",
+                "footer.paris": "باريس، الدائرة الثالثة",
+                "footer.formulation": "دقة التركيب",
+                "footer.extrait": "تركيز Extrait",
+                "footer.vessels": "عبوات 30 مل",
+                "footer.philosophy": "الفلسفة",
+                "footer.silence": "الصمت كتوقيع",
+                "footer.material": "المادة قبل الاستعراض",
+                "footer.presence": "حضور بلا ضجيج",
+                "footer.restraint": "التحفظ كترف",
+                "footer.correspondence": "المراسلات",
+                "footer.emailAddress": "البريد الإلكتروني",
+                "footer.emailPlaceholder": "بريدك الإلكتروني",
+                "footer.receive": "استقبال الإصدارات",
+                "footer.noSpam": "إصدارات جديدة. مناسبات خاصة. بلا إزعاج.",
+                "footer.rights": "كل التركيبات مسجلة بتركيز Extrait.",
+                "footer.privacy": "الخصوصية",
+                "footer.terms": "الشروط",
+                "footer.shipping": "الشحن",
+                "account.privateAccount": "الحساب الخاص",
+                "account.signIn": "تسجيل الدخول",
+                "account.email": "البريد الإلكتروني",
+                "account.password": "كلمة المرور",
+                "account.enterAccount": "دخول الحساب",
+                "account.noAccount": "لا يوجد حساب؟",
+                "account.createOne": "إنشاء حساب",
+                "account.privateClient": "سجل عميل خاص",
+                "account.createAccount": "إنشاء حساب",
+                "account.fullName": "الاسم الكامل",
+                "account.phone": "الهاتف",
+                "account.city": "المدينة",
+                "account.shippingAddress": "عنوان الشحن الافتراضي",
+                "account.receiveReleases": "استقبال ملاحظات الإصدار والمناسبات الخاصة",
+                "account.signOut": "تسجيل الخروج",
+                "account.conciergeDetails": "تفاصيل الكونسيرج",
+                "account.recentOrders": "الطلبات الأخيرة",
+                "account.viewAll": "عرض الكل",
+                "account.account": "الحساب",
+                "account.orderHistory": "سجل الطلبات",
+                "account.backToOrders": "العودة للطلبات",
+                "account.status": "الحالة",
+                "account.composition": "التركيبة",
+                "account.openWhatsapp": "فتح واتساب"
+            }
+        };
+        window.applyUnsaidLanguage = (language) => {
+            const dictionary = window.UNSAID_TRANSLATIONS[language] || window.UNSAID_TRANSLATIONS.en;
+            document.querySelectorAll("[data-i18n]").forEach((element) => {
+                const value = dictionary[element.dataset.i18n];
+                if (value) element.textContent = value;
             });
-            window.animateOrderDrawer = () => { gsap.fromTo(".order-panel", { x: 70, autoAlpha: 0.95 }, { x: 0, autoAlpha: 1, duration: 0.45, ease: "power4.out" }); };
+            document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+                const value = dictionary[element.dataset.i18nPlaceholder];
+                if (value) element.setAttribute("placeholder", value);
+            });
+        };
+        window.applyUnsaidLanguage(document.documentElement.lang || "en");
+        window.addEventListener("load", () => {
+            const revealElements = document.querySelectorAll("[data-hero-reveal], [data-product-card], [data-text-reveal]");
+            revealElements.forEach((element) => element.classList.add("reveal-visible"));
+            if (!window.gsap || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            document.body.addEventListener("htmx:afterSwap", (event) => {
+                if (event.detail.target && event.detail.target.id === "quiz-panel") { gsap.fromTo(event.detail.target, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.34, ease: "power3.out" }); }
+            });
+            window.animateOrderDrawer = () => { gsap.fromTo(".order-panel", { x: 50, autoAlpha: 0.96 }, { x: 0, autoAlpha: 1, duration: 0.35, ease: "power3.out" }); };
+        });
+        document.body.addEventListener("click", (event) => {
+            const checkoutButton = event.target.closest("[data-track-checkout]");
+            if (!checkoutButton || !window.htmx) return;
+            const productId = checkoutButton.getAttribute("data-product-id") || "";
+            window.htmx.ajax("POST", "/api/analytics/events", {
+                values: { event_name: "checkout_opened", product_id: productId, source: checkoutButton.getAttribute("data-source") || "site" },
+                swap: "none"
+            });
         });
     </script>
+    {% include "partials/cookie_consent.html" %}
 </body>
 </html>

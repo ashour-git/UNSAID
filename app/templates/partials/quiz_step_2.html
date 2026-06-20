@@ -1,22 +1,22 @@
 <div class="quiz-panel min-h-[34rem] border border-black/5 bg-stone p-8 sm:p-10 lg:p-12">
     <div class="flex items-center justify-between border-b border-black/5 pb-7">
-        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-clay">Consultation 02 of 03</p>
-        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-black/20">Atmosphere</p>
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-clay" data-i18n="quiz.step2">Consultation 02 of 03</p>
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-black/20" data-i18n="quiz.atmosphere">Atmosphere</p>
     </div>
     <div class="grid min-h-[26rem] gap-10 pt-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
         <div>
-            <h3 class="font-display text-4xl leading-none text-dark sm:text-5xl">Where should it dominate?</h3>
-            <p class="mt-7 max-w-md text-sm leading-7 text-clay font-light">Choose the room before choosing the material. Performance is entirely contextual.</p>
+            <h3 class="font-display text-4xl leading-none text-dark sm:text-5xl" data-i18n="quiz.step2Title">Where should it dominate?</h3>
+            <p class="mt-7 max-w-md text-sm leading-7 text-clay font-light" data-i18n="quiz.step2Copy">Choose the room before choosing the material. Performance is entirely contextual.</p>
         </div>
         <form class="grid gap-px bg-black/5 sm:grid-cols-2">
             <input type="hidden" name="intent" value="{{ intent }}">
             <button type="button" hx-post="/api/quiz/step/3" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-include="closest form" hx-vals='{"atmosphere":"day"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
-                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Day / Office-Safe</span>
-                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone">Precise, composed, close.</span>
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60" data-i18n="quiz.day">Day / Office-Safe</span>
+                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone" data-i18n="quiz.dayCopy">Precise, composed, close.</span>
             </button>
             <button type="button" hx-post="/api/quiz/step/3" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-include="closest form" hx-vals='{"atmosphere":"night"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
-                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Nocturnal / Date-Night</span>
-                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone">Dark, magnetic, remembered.</span>
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60" data-i18n="quiz.night">Nocturnal / Date-Night</span>
+                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone" data-i18n="quiz.nightCopy">Dark, magnetic, remembered.</span>
             </button>
         </form>
     </div>

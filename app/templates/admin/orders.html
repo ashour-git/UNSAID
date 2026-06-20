@@ -1,0 +1,6 @@
+{% extends "admin/layout.html" %}
+{% block title %}Orders &mdash; UNSAID Admin{% endblock %}
+{% block admin_title %}Orders{% endblock %}
+{% block admin_content %}
+<div class="overflow-x-auto border border-canvas/10 bg-canvas/5"><table class="w-full text-left text-sm"><thead class="text-[0.68rem] uppercase tracking-[0.12em] text-canvas/54"><tr><th class="p-4">Order</th><th>Client</th><th>Product</th><th>Status</th><th>Total</th><th>City</th></tr></thead><tbody class="divide-y divide-canvas/10">{% for order in orders %}<tr><td class="p-4"><a href="/admin/orders/{{ order.id }}" class="underline">{{ order.order_number }}</a></td><td>{{ order.customer_name }}</td><td>{{ order.items[0].product_name_snapshot.replace("Unsaid : ", "") if order.items else "Concierge" }}</td><td>{{ order.status }}</td><td>{{ "%.2f"|format(order.subtotal) }}</td><td>{{ order.city }}</td></tr>{% else %}<tr><td class="p-4 text-canvas/54" colspan="6">No orders yet.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

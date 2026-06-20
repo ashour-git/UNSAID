@@ -1,17 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
   <title id="title">UNSAID Velvet extrait bottle</title>
-  <desc id="desc">Black fragrance bottle with deep velvet textile folds.</desc>
+  <desc id="desc">Dimensional black glass luxury perfume bottle with deep velvet rose accents.</desc>
   <defs>
-    <linearGradient id="velvet" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#030000"/><stop offset="0.4" stop-color="#1a0909"/><stop offset="1" stop-color="#000"/></linearGradient>
-    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#020202"/><stop offset="0.22" stop-color="#3a1d1d"/><stop offset="0.5" stop-color="#050303"/><stop offset="0.78" stop-color="#8b6761"/><stop offset="1" stop-color="#020202"/></linearGradient>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#020101"/><stop offset="0.14" stop-color="#231010"/><stop offset="0.36" stop-color="#050202"/><stop offset="0.58" stop-color="#000"/><stop offset="0.82" stop-color="#704d48"/><stop offset="1" stop-color="#020101"/></linearGradient>
+    <linearGradient id="edge" x1="0" x2="1"><stop offset="0" stop-color="#ffe5d7" stop-opacity="0.13"/><stop offset="0.52" stop-color="#fff" stop-opacity="0.04"/><stop offset="1" stop-color="#c9aaa0" stop-opacity="0.24"/></linearGradient>
+    <linearGradient id="cap" x1="0" x2="1"><stop offset="0" stop-color="#040202"/><stop offset="0.27" stop-color="#5a3430"/><stop offset="0.54" stop-color="#060303"/><stop offset="0.82" stop-color="#d8b7aa"/><stop offset="1" stop-color="#040202"/></linearGradient>
+    <radialGradient id="shine" cx="50%" cy="42%" r="48%"><stop offset="0" stop-color="#ffe5d7" stop-opacity="0.23"/><stop offset="0.5" stop-color="#c9aaa0" stop-opacity="0.08"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="34" stdDeviation="26" flood-color="#000" flood-opacity="0.56"/></filter>
+    <filter id="blur"><feGaussianBlur stdDeviation="9"/></filter>
   </defs>
-  <rect width="900" height="1200" fill="url(#velvet)"/>
-  <path d="M120 1030c120-260 120-540 0-840M780 1030c-120-260-120-540 0-840" fill="none" stroke="#d8c5b8" stroke-opacity="0.08" stroke-width="70"/>
-  <path d="M348 222h204v116H348z" fill="#040202" stroke="#c2aaa0" stroke-width="3"/>
-  <path d="M306 332h288v642c0 57-46 103-103 103h-82c-57 0-103-46-103-103V332z" fill="url(#glass)" stroke="#c2aaa0" stroke-width="4"/>
-  <path d="M342 382h44v540c0 72 25 108 62 128" fill="none" stroke="#ffe5d7" stroke-opacity="0.12" stroke-width="8"/>
-  <rect x="352" y="604" width="196" height="212" fill="#040202" stroke="#d8c5b8" stroke-width="2"/>
-  <text x="450" y="684" fill="#fff0e8" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" text-anchor="middle" letter-spacing="14">UNSAID</text>
-  <text x="450" y="735" fill="#c9aaa0" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" letter-spacing="8">VELVET</text>
-  <text x="450" y="774" fill="#8e7771" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+  <ellipse cx="450" cy="1080" rx="210" ry="46" fill="#000" opacity="0.35" filter="url(#blur)"/>
+  <circle cx="450" cy="560" r="360" fill="url(#shine)"/>
+  <path d="M118 1060c118-270 118-610 0-920M782 1060c-118-270-118-610 0-920" fill="none" stroke="#d8c5b8" stroke-opacity="0.08" stroke-width="72"/>
+  <g filter="url(#softShadow)">
+    <rect x="383" y="124" width="134" height="44" rx="8" fill="#040202" stroke="#c9aaa0" stroke-opacity="0.50" stroke-width="2"/>
+    <rect x="350" y="165" width="200" height="118" rx="10" fill="url(#cap)" stroke="#c9aaa0" stroke-opacity="0.62" stroke-width="3"/>
+    <rect x="372" y="188" width="156" height="18" rx="4" fill="#ffe5d7" opacity="0.10"/>
+    <path d="M330 284h240c27 0 50 23 50 50v602c0 82-66 148-148 148h-44c-82 0-148-66-148-148V334c0-27 23-50 50-50z" fill="url(#glass)" stroke="#c9aaa0" stroke-opacity="0.64" stroke-width="5"/>
+    <path d="M313 356c16-30 34-48 58-58h158c30 8 50 28 58 60" fill="none" stroke="#ffe5d7" stroke-opacity="0.15" stroke-width="5"/>
+    <path d="M330 330v604c0 54 44 98 98 98h44c54 0 98-44 98-98V330" fill="url(#edge)" opacity="0.9"/>
+    <path d="M356 350h38v520c0 82 28 133 78 160" fill="none" stroke="#ffe5d7" stroke-opacity="0.14" stroke-width="11" stroke-linecap="round"/>
+    <path d="M545 360h18v470c0 95-30 158-86 190" fill="none" stroke="#ffe5d7" stroke-opacity="0.09" stroke-width="6" stroke-linecap="round"/>
+    <rect x="332" y="926" width="236" height="80" rx="20" fill="#060303" opacity="0.72"/>
+    <rect x="348" y="574" width="204" height="272" rx="4" fill="#040202" stroke="#d8c5b8" stroke-opacity="0.82" stroke-width="3"/>
+    <rect x="366" y="594" width="168" height="232" rx="2" fill="none" stroke="#ffe5d7" stroke-opacity="0.08" stroke-width="2"/>
+    <text x="450" y="674" fill="#fff0e8" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" text-anchor="middle" letter-spacing="13">UNSAID</text>
+    <text x="450" y="731" fill="#c9aaa0" font-family="Arial, Helvetica, sans-serif" font-size="21" text-anchor="middle" letter-spacing="8">VELVET</text>
+    <text x="450" y="779" fill="#8e7771" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+  </g>
 </svg>

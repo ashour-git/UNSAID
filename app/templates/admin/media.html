@@ -1,0 +1,46 @@
+{% extends "admin/layout.html" %}
+{% block title %}Media library &mdash; UNSAID Admin{% endblock %}
+{% block admin_title %}Media library{% endblock %}
+{% block admin_content %}
+<div class="mb-8 border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+    <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Upload</p>
+    <form method="post" action="/admin/upload" enctype="multipart/form-data" hx-post="/admin/upload" hx-encoding="multipart/form-data" hx-target="#upload-result" class="mt-4 flex flex-wrap items-end gap-4">
+        <input type="file" name="file" class="text-sm text-canvas/72 file:mr-4 file:border file:border-canvas/10 file:bg-transparent file:px-4 file:py-2.5 file:text-[0.68rem] file:text-canvas/72 file:transition file:duration-300 hover:file:border-canvas/30">
+        <button type="submit" class="border border-canvas px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell">Upload</button>
+    </form>
+    <div id="upload-result" class="mt-3"></div>
+</div>
+
+{% if media %}
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {% for item in media %}
+    <div class="group border border-canvas/10 bg-canvas/5 p-4">
+        <div class="flex items-center justify-center bg-canvas/[0.02]">
+            <img src="{{ item.url }}" alt="{{ item.filename }}" class="h-40 w-full object-contain">
+        </div>
+        <p class="mt-3 truncate text-[0.65rem] text-canvas/54">{{ item.filename }}</p>
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-[0.6rem] text-canvas/32">{{ item.size if item.size else '' }}</span>
+            <form method="post" action="/admin/media/delete" class="inline" onsubmit="return confirm('Delete {{ item.filename }}?')">
+                <input type="hidden" name="filename" value="{{ item.filename }}">
+                <button class="border border-canvas/10 px-3 py-1.5 text-[0.65rem] text-canvas/54 transition duration-300 hover:border-red-400/30 hover:text-red-400/80">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="border border-canvas/10 bg-canvas/5 p-12 text-center">
+    <p class="font-display text-2xl text-canvas/42">No media uploaded</p>
+    <p class="mt-4 text-sm text-canvas/32">Upload images to use in product descriptions, galleries, and editorial content.</p>
+</div>
+{% endif %}
+
+<script>
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'upload-result') {
+            location.reload();
+        }
+    });
+</script>
+{% endblock %}

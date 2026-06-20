@@ -1,21 +1,21 @@
 <div class="quiz-panel min-h-[34rem] border border-black/5 bg-stone p-8 sm:p-10 lg:p-12">
     <div class="flex items-center justify-between border-b border-black/5 pb-7">
-        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-clay">Consultation 01 of 03</p>
-        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-black/20">Intent</p>
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-clay" data-i18n="quiz.step1">Consultation 01 of 03</p>
+        <p class="text-[0.68rem] font-medium uppercase tracking-wide text-black/20" data-i18n="quiz.intent">Intent</p>
     </div>
     <div class="grid min-h-[26rem] gap-10 pt-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
         <div>
-            <h3 class="font-display text-4xl leading-none text-dark sm:text-5xl">Who is this presence for?</h3>
-            <p class="mt-7 max-w-md text-sm leading-7 text-clay font-light">We begin with motive. Identity wears differently from ceremony.</p>
+            <h3 class="font-display text-4xl leading-none text-dark sm:text-5xl" data-i18n="quiz.step1Title">Who is this presence for?</h3>
+            <p class="mt-7 max-w-md text-sm leading-7 text-clay font-light" data-i18n="quiz.step1Copy">We begin with motive. Identity wears differently from ceremony.</p>
         </div>
         <form class="grid gap-px bg-black/5 sm:grid-cols-2">
             <button type="button" hx-post="/api/quiz/step/2" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-vals='{"intent":"self"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
-                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">Self-Identity</span>
-                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone">A private signature.</span>
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60" data-i18n="quiz.self">Self-Identity</span>
+                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone" data-i18n="quiz.selfCopy">A private signature.</span>
             </button>
             <button type="button" hx-post="/api/quiz/step/2" hx-target="#quiz-panel" hx-swap="outerHTML swap:280ms settle:280ms" hx-vals='{"intent":"gift"}' class="group bg-stone p-8 text-left transition duration-500 hover:bg-dark">
-                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60">High-End Gifting</span>
-                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone">A controlled gesture.</span>
+                <span class="block text-[0.65rem] font-medium uppercase tracking-wide text-clay group-hover:text-stone/60" data-i18n="quiz.gift">High-End Gifting</span>
+                <span class="mt-16 block font-display text-2xl leading-tight text-dark group-hover:text-stone" data-i18n="quiz.giftCopy">A controlled gesture.</span>
             </button>
         </form>
     </div>

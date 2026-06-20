@@ -1,6 +1,7 @@
-<div class="border border-dark/10 bg-parchment p-7 text-dark">
+<div class="luxury-surface border border-shell/10 bg-paper p-7 text-shell">
     <p class="text-[0.65rem] font-medium uppercase tracking-wide text-clay">Dispatch Ready</p>
-    <p class="mt-5 font-display text-2xl leading-tight text-dark">{{ product.name.replace("Unsaid : ", "") }} is prepared for WhatsApp close.</p>
-    <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="mt-7 inline-flex w-full justify-center border border-dark bg-dark px-6 py-4 text-xs font-medium uppercase tracking-wide text-stone transition duration-500 hover:bg-bronze hover:border-bronze">Open WhatsApp Business</a>
+    <p class="mt-5 font-display text-2xl leading-tight text-shell">{{ product.name.replace("Unsaid : ", "") }} is prepared for WhatsApp close.</p>
+    {% if order %}<p class="mt-3 text-xs text-clay">Order {{ order.order_number }} is saved in the private order desk.</p>{% endif %}
+    <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="mt-7 inline-flex w-full justify-center border border-shell bg-shell px-6 py-4 text-xs font-medium uppercase tracking-wide text-canvas transition duration-500 hover:bg-metal hover:border-metal">Open WhatsApp Business</a>
 </div>
 <script>window.setTimeout(() => { window.location.href = "{{ whatsapp_url }}"; }, 300);</script>

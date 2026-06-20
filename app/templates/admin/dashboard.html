@@ -1,0 +1,12 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin Dashboard &mdash; UNSAID{% endblock %}
+{% block admin_title %}Dashboard{% endblock %}
+{% block admin_content %}
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.7rem] text-canvas/54">Orders</p><p class="mt-4 font-display text-4xl">{{ metrics.orders_total }}</p></div>
+    <div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.7rem] text-canvas/54">New</p><p class="mt-4 font-display text-4xl">{{ metrics.new_orders }}</p></div>
+    <div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.7rem] text-canvas/54">Revenue estimate</p><p class="mt-4 font-display text-4xl">{{ "%.2f"|format(metrics.revenue_estimate) }}</p></div>
+    <div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.7rem] text-canvas/54">Checkout conversion</p><p class="mt-4 font-display text-4xl">{{ metrics.conversion_rate }}%</p></div>
+</div>
+<div class="mt-6 grid gap-6 lg:grid-cols-2"><div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.72rem] text-canvas/54">Top products</p>{% for product in metrics.top_products %}<p class="mt-4 text-sm">{{ product.name }}: {{ product.orders }} orders</p>{% else %}<p class="mt-4 text-sm text-canvas/54">No demand yet.</p>{% endfor %}</div><div class="border border-canvas/10 bg-canvas/5 p-6"><p class="text-[0.72rem] text-canvas/54">Latest AI insight</p><p class="mt-4 text-sm leading-7 text-canvas/78">{{ snapshot.summary if snapshot else "Generate an insight snapshot after orders and events are captured." }}</p></div></div>
+{% endblock %}

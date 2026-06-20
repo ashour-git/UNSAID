@@ -1,8 +1,12 @@
+import logging
+import warnings
 from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -26,12 +30,36 @@ class Settings(BaseSettings):
     whatsapp_business_number: str = "15551234567"
     groq_api_key: str = ""
     groq_model: str = "llama-3.3-70b-versatile"
+    session_secret_key: str = "change-me-in-production"
+    session_cookie_name: str = "unsaid_session"
+    session_cookie_secure: bool = False
+    admin_bootstrap_email: str = ""
+    admin_bootstrap_password: str = ""
+    log_file: str = ""
+    enable_hsts: bool = False
+    enable_rate_limit: bool = True
+    site_url: str = "http://localhost:8000"
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator("session_secret_key")
+    @classmethod
+    def validate_session_secret_key(cls, value: str) -> str:
+        if value == "change-me-in-production":
+            warnings.warn(
+                "CRITICAL: session_secret_key is still the default value. "
+                "Set a strong secret in production.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            logger.warning(
+                "CRITICAL: session_secret_key is still the default value 'change-me-in-production'."
+            )
+        return value
 
     @field_validator("debug", mode="before")
     @classmethod

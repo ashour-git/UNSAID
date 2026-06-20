@@ -1,0 +1,5 @@
+{% if orders %}
+<div class="mt-6 overflow-x-auto"><table class="w-full text-left text-sm"><thead class="text-[0.68rem] uppercase tracking-[0.12em] text-mute"><tr><th class="py-3">Order</th><th>Fragrance</th><th>Status</th><th>Total</th></tr></thead><tbody class="divide-y divide-shell/8">{% for order in orders[:8] %}<tr><td class="py-4"><a href="/account/orders/{{ order.order_number }}" class="text-shell underline">{{ order.order_number }}</a></td><td>{{ order.items[0].product_name_snapshot.replace("Unsaid : ", "") if order.items else "Concierge" }}</td><td>{{ order.status }}</td><td>{{ "%.2f"|format(order.subtotal) }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}
+<p class="mt-6 text-sm text-mute">No orders yet. Your future enquiries will appear here.</p>
+{% endif %}

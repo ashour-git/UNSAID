@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} &mdash; UNSAID{% endblock %}
+
+{% block content %}
+<section class="bg-canvas px-5 pb-20 pt-28 sm:px-8 lg:px-12">
+    <div class="mx-auto max-w-[1100px] border border-shell/10 bg-paper p-8 sm:p-12 lg:p-16">
+        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-mute">{{ eyebrow }}</p>
+        <h1 class="mt-6 font-display text-4xl leading-none text-shell sm:text-5xl lg:text-6xl">{{ title }}</h1>
+        <div class="mt-10 space-y-8 text-sm leading-8 text-text sm:text-base">
+            {% for section in sections %}
+            <section>
+                <h2 class="font-display text-2xl leading-none text-shell sm:text-3xl">{{ section.heading }}</h2>
+                <div class="mt-4 space-y-4">
+                    {% for paragraph in section.paragraphs %}
+                    <p>{{ paragraph }}</p>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

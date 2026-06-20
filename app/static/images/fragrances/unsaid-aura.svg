@@ -1,18 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
   <title id="title">UNSAID Aura extrait bottle</title>
-  <desc id="desc">Black glass perfume bottle with soft ivory radiance.</desc>
+  <desc id="desc">Dimensional black glass luxury perfume bottle with luminous ivory accents.</desc>
   <defs>
-    <radialGradient id="light" cx="50%" cy="44%" r="48%"><stop offset="0" stop-color="#f2eadb" stop-opacity="0.26"/><stop offset="0.58" stop-color="#b6a98d" stop-opacity="0.08"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
-    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#040404"/><stop offset="0.24" stop-color="#39352d"/><stop offset="0.5" stop-color="#050505"/><stop offset="0.78" stop-color="#857e6d"/><stop offset="1" stop-color="#030303"/></linearGradient>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#020202"/><stop offset="0.14" stop-color="#211f19"/><stop offset="0.36" stop-color="#050403"/><stop offset="0.58" stop-color="#000"/><stop offset="0.82" stop-color="#6f6857"/><stop offset="1" stop-color="#030303"/></linearGradient>
+    <linearGradient id="edge" x1="0" x2="1"><stop offset="0" stop-color="#fff6e6" stop-opacity="0.15"/><stop offset="0.52" stop-color="#fff" stop-opacity="0.05"/><stop offset="1" stop-color="#d6cbb4" stop-opacity="0.24"/></linearGradient>
+    <linearGradient id="cap" x1="0" x2="1"><stop offset="0" stop-color="#040404"/><stop offset="0.27" stop-color="#514c40"/><stop offset="0.54" stop-color="#070707"/><stop offset="0.82" stop-color="#efe4cc"/><stop offset="1" stop-color="#040404"/></linearGradient>
+    <radialGradient id="shine" cx="50%" cy="42%" r="48%"><stop offset="0" stop-color="#fff6e6" stop-opacity="0.26"/><stop offset="0.5" stop-color="#d6cbb4" stop-opacity="0.09"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="34" stdDeviation="26" flood-color="#000" flood-opacity="0.55"/></filter>
+    <filter id="blur"><feGaussianBlur stdDeviation="9"/></filter>
   </defs>
-  <rect width="900" height="1200" fill="#030303"/>
-  <circle cx="450" cy="510" r="408" fill="url(#light)"/>
-  <path d="M112 110h676v980" fill="none" stroke="#f2eadb" stroke-opacity="0.12" stroke-width="2"/>
-  <path d="M348 222h204v116H348z" fill="#040404" stroke="#ded3bd" stroke-width="3"/>
-  <path d="M306 332h288v640c0 58-47 105-105 105h-78c-58 0-105-47-105-105V332z" fill="url(#glass)" stroke="#ded3bd" stroke-width="4"/>
-  <path d="M344 382h46v530c0 70 25 108 60 132" fill="none" stroke="#fff6e6" stroke-opacity="0.14" stroke-width="8"/>
-  <rect x="353" y="604" width="194" height="212" fill="#040404" stroke="#e9dfca" stroke-width="2"/>
-  <text x="450" y="684" fill="#fff7e8" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" text-anchor="middle" letter-spacing="14">UNSAID</text>
-  <text x="450" y="735" fill="#c7bea9" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" letter-spacing="8">AURA</text>
-  <text x="450" y="774" fill="#8d8574" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+  <ellipse cx="450" cy="1080" rx="210" ry="46" fill="#000" opacity="0.34" filter="url(#blur)"/>
+  <circle cx="450" cy="560" r="374" fill="url(#shine)"/>
+  <g filter="url(#softShadow)">
+    <rect x="383" y="124" width="134" height="44" rx="8" fill="#040404" stroke="#ded3bd" stroke-opacity="0.54" stroke-width="2"/>
+    <rect x="350" y="165" width="200" height="118" rx="10" fill="url(#cap)" stroke="#ded3bd" stroke-opacity="0.66" stroke-width="3"/>
+    <rect x="372" y="188" width="156" height="18" rx="4" fill="#fff6e6" opacity="0.12"/>
+    <path d="M330 284h240c27 0 50 23 50 50v602c0 82-66 148-148 148h-44c-82 0-148-66-148-148V334c0-27 23-50 50-50z" fill="url(#glass)" stroke="#ded3bd" stroke-opacity="0.68" stroke-width="5"/>
+    <path d="M313 356c16-30 34-48 58-58h158c30 8 50 28 58 60" fill="none" stroke="#fff6e6" stroke-opacity="0.17" stroke-width="5"/>
+    <path d="M330 330v604c0 54 44 98 98 98h44c54 0 98-44 98-98V330" fill="url(#edge)" opacity="0.9"/>
+    <path d="M356 350h38v520c0 82 28 133 78 160" fill="none" stroke="#fff6e6" stroke-opacity="0.16" stroke-width="11" stroke-linecap="round"/>
+    <path d="M545 360h18v470c0 95-30 158-86 190" fill="none" stroke="#fff6e6" stroke-opacity="0.10" stroke-width="6" stroke-linecap="round"/>
+    <rect x="332" y="926" width="236" height="80" rx="20" fill="#070706" opacity="0.72"/>
+    <rect x="348" y="574" width="204" height="272" rx="4" fill="#040404" stroke="#e9dfca" stroke-opacity="0.82" stroke-width="3"/>
+    <rect x="366" y="594" width="168" height="232" rx="2" fill="none" stroke="#fff6e6" stroke-opacity="0.09" stroke-width="2"/>
+    <text x="450" y="674" fill="#fff7e8" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" text-anchor="middle" letter-spacing="13">UNSAID</text>
+    <text x="450" y="731" fill="#c7bea9" font-family="Arial, Helvetica, sans-serif" font-size="21" text-anchor="middle" letter-spacing="8">AURA</text>
+    <text x="450" y="779" fill="#8d8574" font-family="Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" letter-spacing="5">EXTRAIT 30ML</text>
+  </g>
 </svg>

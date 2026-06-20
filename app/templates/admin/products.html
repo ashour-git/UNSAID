@@ -1,0 +1,80 @@
+{% extends "admin/layout.html" %}
+{% block title %}Products &mdash; UNSAID Admin{% endblock %}
+{% block admin_title %}Products{% endblock %}
+{% block admin_content %}
+<div x-data="{ search: '' }">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm text-canvas/54">{{ products|length }} product{{ 's' if products|length != 1 else '' }}</p>
+        <div class="flex flex-wrap gap-3">
+            <input type="text" x-model="search" placeholder="Search products&hellip;" class="border border-canvas/10 bg-canvas/5 px-4 py-2.5 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/30 placeholder:text-canvas/32">
+            <a href="/admin/products/new" class="inline-flex items-center border border-canvas px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell">Add product</a>
+        </div>
+    </div>
+
+    {% if products %}
+    <div class="overflow-x-auto border border-canvas/10 bg-canvas/5">
+        <table class="w-full text-left text-sm">
+            <thead class="text-[0.68rem] uppercase tracking-[0.12em] text-canvas/54">
+                <tr>
+                    <th class="p-4">Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Options</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-canvas/10">
+                {% for product in products %}
+                <tr x-show="search === '' || '{{ product.name }} {{ product.dynamic_slug }}'.toLowerCase().includes(search.toLowerCase())" class="transition duration-300 hover:bg-canvas/[0.03]">
+                    <td class="p-4">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="h-10 w-10 rounded border border-canvas/10 object-cover">
+                        {% else %}
+                        <div class="flex h-10 w-10 items-center justify-center rounded border border-canvas/10 bg-canvas/5 text-[0.6rem] text-canvas/32">N/A</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <p class="font-medium text-canvas">{{ product.name.replace("Unsaid : ", "") }}</p>
+                        <p class="text-[0.68rem] text-canvas/42">{{ product.dynamic_slug }}</p>
+                    </td>
+                    <td class="text-canvas/72">{{ "%.2f"|format(product.price) }}</td>
+                    <td class="text-canvas/72">{{ product.stock }}</td>
+                    <td>
+                        {% if product.is_active %}
+                        <span class="inline-flex items-center gap-1.5 text-[0.68rem] text-green-400">
+                            <span class="h-1.5 w-1.5 rounded-full bg-green-400"></span>Active
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center gap-1.5 text-[0.68rem] text-canvas/42">
+                            <span class="h-1.5 w-1.5 rounded-full bg-canvas/32"></span>Draft
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="text-canvas/72">{{ product.options|length if product.options else 0 }}</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <a href="/admin/products/{{ product.id }}/edit" class="border border-canvas/10 px-3 py-1.5 text-[0.68rem] text-canvas/72 transition duration-300 hover:border-canvas/30 hover:text-canvas">Edit</a>
+                            <form method="post" action="/admin/products/{{ product.id }}/toggle" class="inline">
+                                <button class="border border-canvas/10 px-3 py-1.5 text-[0.68rem] text-canvas/54 transition duration-300 hover:border-canvas/30 hover:text-canvas">{{ 'Deactivate' if product.is_active else 'Activate' }}</button>
+                            </form>
+                            <form method="post" action="/admin/products/{{ product.id }}/delete" class="inline" onsubmit="return confirm('Delete {{ product.name.replace('Unsaid : ', '') }}?')">
+                                <button class="border border-red-400/20 px-3 py-1.5 text-[0.68rem] text-red-400/70 transition duration-300 hover:border-red-400/40 hover:text-red-400">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="border border-canvas/10 bg-canvas/5 p-12 text-center">
+        <p class="font-display text-2xl text-canvas/42">No products yet</p>
+        <p class="mt-4 text-sm text-canvas/32">Create your first product to start building the collection.</p>
+        <a href="/admin/products/new" class="mt-6 inline-flex items-center border border-canvas px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-canvas transition duration-500 hover:bg-canvas hover:text-shell">Add product</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

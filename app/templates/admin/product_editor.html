@@ -1,0 +1,270 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ 'Edit ' + product.name if product else 'New product' }} &mdash; UNSAID Admin{% endblock %}
+{% block admin_title %}{{ 'Edit ' + product.name if product else 'New product' }}{% endblock %}
+{% block admin_content %}
+{% set is_edit = product is defined and product %}
+{% set form_action = '/admin/products/' + (product.id|string) if is_edit else '/admin/products' %}
+{% set olfactory = product.olfactory_notes if is_edit and product.olfactory_notes else {'top': [], 'heart': [], 'base': []} %}
+
+<form method="post" action="{{ form_action }}" class="grid gap-10 lg:grid-cols-[1fr_300px]">
+    <div class="space-y-10">
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Product basics</p>
+            <div class="mt-6 space-y-5">
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Name</span>
+                    <input type="text" name="name" value="{{ product.name if is_edit else '' }}" required class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="UNSAID : Apex">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Subtitle</span>
+                    <input type="text" name="subtitle" value="{{ product.subtitle if is_edit else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="The summit of quiet dominance">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Slug</span>
+                    <input type="text" name="dynamic_slug" id="slug-input" value="{{ product.dynamic_slug if is_edit else '' }}" required class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="unsaid-apex">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Description</span>
+                    <textarea name="description" rows="6" required class="mt-2 w-full resize-none border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="A fragrance built around restraint&hellip;">{{ product.description if is_edit else '' }}</textarea>
+                </label>
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <label class="block">
+                        <span class="text-[0.7rem] text-canvas/54">Concentration</span>
+                        <input type="text" name="concentration" value="{{ product.concentration if is_edit else 'Extrait de Parfum' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                    </label>
+                    <label class="block">
+                        <span class="text-[0.7rem] text-canvas/54">Volume</span>
+                        <input type="text" name="volume" value="{{ product.volume if is_edit else '30ml' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Pricing</p>
+            <div class="mt-6 grid gap-5 sm:grid-cols-3">
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Price</span>
+                    <input type="number" name="price" step="0.01" value="{{ product.price if is_edit else '' }}" required class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="0.00">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Compare-at price</span>
+                    <input type="number" name="compare_at_price" step="0.01" value="{{ product.compare_at_price if is_edit else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="Optional">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Stock</span>
+                    <input type="number" name="stock" value="{{ product.stock if is_edit else '0' }}" required class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                </label>
+            </div>
+        </div>
+
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Olfactory notes</p>
+            <div class="mt-6 grid gap-5 sm:grid-cols-3">
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Top notes</span>
+                    <input type="text" name="top_notes" value="{{ olfactory.top|join(', ') if olfactory.top else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="Bergamot, Pink Pepper">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Heart notes</span>
+                    <input type="text" name="heart_notes" value="{{ olfactory.heart|join(', ') if olfactory.heart else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="Iris, Leather">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Base notes</span>
+                    <input type="text" name="base_notes" value="{{ olfactory.base|join(', ') if olfactory.base else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="Amber, Sandalwood">
+                </label>
+            </div>
+        </div>
+
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Product image</p>
+            <div class="mt-6 space-y-5">
+                <div id="image-preview" class="flex items-center gap-4">
+                    {% if is_edit and product.image_url %}
+                    <img src="{{ product.image_url }}" alt="Current image" class="h-28 w-28 border border-canvas/10 object-cover">
+                    {% else %}
+                    <div class="flex h-28 w-28 items-center justify-center border border-canvas/10 bg-canvas/5 text-[0.68rem] text-canvas/32">No image</div>
+                    {% endif %}
+                </div>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Image URL</span>
+                    <input type="text" name="image_url" id="image-url-input" value="{{ product.image_url if is_edit else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="https://example.com/image.jpg">
+                </label>
+                <div class="border-t border-canvas/10 pt-5">
+                    <p class="text-[0.68rem] text-canvas/42">Or upload a file</p>
+                    <form method="post" action="/admin/upload" enctype="multipart/form-data" hx-post="/admin/upload" hx-target="#image-upload-result" hx-encoding="multipart/form-data" class="mt-3">
+                        <input type="file" name="file" class="text-sm text-canvas/72 file:mr-4 file:border file:border-canvas/10 file:bg-transparent file:px-4 file:py-2 file:text-[0.68rem] file:text-canvas/72 file:transition file:duration-300 hover:file:border-canvas/30">
+                        <button type="submit" class="ml-3 border border-canvas/10 px-4 py-2 text-[0.68rem] text-canvas/72 transition duration-300 hover:border-canvas/30 hover:text-canvas">Upload</button>
+                    </form>
+                    <div id="image-upload-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        {% if is_edit %}
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <div class="flex items-center justify-between">
+                <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Product options</p>
+            </div>
+            {% if product.options %}
+            <div class="mt-5 overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="text-[0.68rem] uppercase tracking-[0.12em] text-canvas/54">
+                        <tr><th class="pb-3">Volume</th><th>Price</th><th>Stock</th><th>Default</th><th></th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-canvas/10">
+                        {% for option in product.options %}
+                        <tr>
+                            <td class="py-3 text-canvas/72">{{ option.volume }}</td>
+                            <td class="text-canvas/72">{{ "%.2f"|format(option.price) }}</td>
+                            <td class="text-canvas/72">{{ option.stock }}</td>
+                            <td>{% if option.is_default %}<span class="text-[0.68rem] text-canvas/54">Default</span>{% endif %}</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    {% if not option.is_default %}
+                                    <form method="post" action="/admin/products/{{ product.id }}/options/{{ option.id }}/default" class="inline">
+                                        <button class="text-[0.68rem] text-canvas/54 transition duration-300 hover:text-canvas">Set default</button>
+                                    </form>
+                                    {% endif %}
+                                    <form method="post" action="/admin/products/{{ product.id }}/options/{{ option.id }}/delete" class="inline" onsubmit="return confirm('Delete this option?')">
+                                        <button class="text-[0.68rem] text-red-400/70 transition duration-300 hover:text-red-400">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <div class="mt-6 border-t border-canvas/10 pt-5">
+                <p class="text-[0.68rem] text-canvas/42">Add option</p>
+                <form method="post" action="/admin/products/{{ product.id }}/options" hx-post="/admin/products/{{ product.id }}/options" hx-target="#options-result" class="mt-3 flex flex-wrap items-end gap-3">
+                    <label class="block">
+                        <span class="text-[0.65rem] text-canvas/54">Volume</span>
+                        <input type="text" name="volume" value="30ml" class="mt-1 border-b border-canvas/10 bg-transparent px-1 py-2 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                    </label>
+                    <label class="block">
+                        <span class="text-[0.65rem] text-canvas/54">Price</span>
+                        <input type="number" name="price" step="0.01" class="mt-1 border-b border-canvas/10 bg-transparent px-1 py-2 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                    </label>
+                    <label class="block">
+                        <span class="text-[0.65rem] text-canvas/54">Stock</span>
+                        <input type="number" name="stock" value="0" class="mt-1 border-b border-canvas/10 bg-transparent px-1 py-2 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40">
+                    </label>
+                    <button type="submit" class="border border-canvas/10 px-4 py-2 text-[0.68rem] text-canvas/72 transition duration-300 hover:border-canvas/30 hover:text-canvas">Add option</button>
+                </form>
+                <div id="options-result" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Gallery images</p>
+            <div class="mt-5" id="gallery-container">
+                {% if is_edit and product.gallery_images %}
+                <div class="flex flex-wrap gap-3">
+                    {% for img in product.gallery_images %}
+                    <div class="group relative">
+                        <img src="{{ img.url }}" alt="Gallery" class="h-24 w-24 border border-canvas/10 object-cover">
+                        <form method="post" action="/admin/products/{{ product.id }}/gallery/{{ img.id }}/delete" class="absolute -right-1.5 -top-1.5 opacity-0 transition duration-200 group-hover:opacity-100">
+                            <button class="flex h-5 w-5 items-center justify-center border border-red-400/30 bg-canvas text-[0.6rem] text-red-400/70 hover:border-red-400/50">&times;</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-sm text-canvas/32">No gallery images yet.</p>
+                {% endif %}
+            </div>
+            <div class="mt-5 border-t border-canvas/10 pt-5">
+                <p class="text-[0.68rem] text-canvas/42">Add image</p>
+                <form method="post" action="/admin/products/{{ product.id }}/gallery" hx-post="/admin/products/{{ product.id }}/gallery" hx-target="#gallery-result" class="mt-3 flex flex-wrap items-end gap-3">
+                    <label class="block">
+                        <span class="text-[0.65rem] text-canvas/54">Image URL</span>
+                        <input type="text" name="image_url" class="mt-1 border-b border-canvas/10 bg-transparent px-1 py-2 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="https://example.com/image.jpg">
+                    </label>
+                    <button type="submit" class="border border-canvas/10 px-4 py-2 text-[0.68rem] text-canvas/72 transition duration-300 hover:border-canvas/30 hover:text-canvas">Add</button>
+                </form>
+                <div id="gallery-result" class="mt-3"></div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="border border-canvas/10 bg-canvas/5 p-6 sm:p-8">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">SEO</p>
+            <div class="mt-6 space-y-5">
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Meta title</span>
+                    <input type="text" name="meta_title" value="{{ product.meta_title if is_edit else '' }}" class="mt-2 w-full border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="UNSAID : Apex &mdash; Extrait de Parfum">
+                </label>
+                <label class="block">
+                    <span class="text-[0.7rem] text-canvas/54">Meta description</span>
+                    <textarea name="meta_description" rows="2" class="mt-2 w-full resize-none border-b border-canvas/10 bg-transparent px-1 py-3 text-sm text-canvas outline-none transition duration-500 focus:border-canvas/40 placeholder:text-canvas/28" placeholder="The summit of quiet dominance. An architectural extrait&hellip;">{{ product.meta_description if is_edit else '' }}</textarea>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <aside class="space-y-6">
+        <div class="border border-canvas/10 bg-canvas/5 p-6">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Status</p>
+            <label class="mt-4 flex items-center gap-3">
+                <input type="checkbox" name="is_active" value="1" {{ 'checked' if is_edit and product.is_active else '' }} class="h-4 w-4 border-canvas/20 bg-transparent accent-canvas">
+                <span class="text-sm text-canvas/72">Active</span>
+            </label>
+            <p class="mt-2 text-[0.68rem] text-canvas/42">When active, the product is visible on the storefront.</p>
+        </div>
+
+        {% if is_edit %}
+        <div class="border border-canvas/10 bg-canvas/5 p-6">
+            <p class="text-[0.72rem] uppercase tracking-[0.12em] text-canvas/54">Details</p>
+            <div class="mt-4 space-y-3 text-[0.7rem] text-canvas/54">
+                <p>Created <span class="text-canvas/72">{{ product.created_at.strftime('%d %b %Y') if product.created_at else '&mdash;' }}</span></p>
+                <p>Updated <span class="text-canvas/72">{{ product.updated_at.strftime('%d %b %Y') if product.updated_at else '&mdash;' }}</span></p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col gap-3">
+            <button type="submit" class="w-full border border-canvas bg-canvas px-5 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-shell transition duration-500 hover:bg-canvas/90">Save</button>
+            <a href="/admin/products" class="block border border-canvas/10 px-5 py-3 text-center text-[0.72rem] text-canvas/72 transition duration-300 hover:border-canvas/30 hover:text-canvas">Cancel</a>
+        </div>
+    </aside>
+</form>
+
+<script>
+    (function() {
+        const nameInput = document.querySelector('input[name="name"]');
+        const slugInput = document.getElementById('slug-input');
+        if (nameInput && slugInput && !slugInput.value) {
+            nameInput.addEventListener('input', function() {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/^unsaid\s*:?\s*/i, '')
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-');
+                slugInput.value = slug ? 'unsaid-' + slug : '';
+            });
+        }
+    })();
+
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        const target = event.detail.target;
+        if (target.id === 'image-upload-result') {
+            try {
+                const response = JSON.parse(target.textContent.trim());
+                if (response.url) {
+                    document.getElementById('image-url-input').value = response.url;
+                    const preview = document.getElementById('image-preview');
+                    preview.innerHTML = '<img src="' + response.url + '" alt="Uploaded" class="h-28 w-28 border border-canvas/10 object-cover">';
+                }
+            } catch (e) {}
+        }
+        if (target.id === 'options-result' || target.id === 'gallery-result') {
+            location.reload();
+        }
+    });
+</script>
+{% endblock %}
